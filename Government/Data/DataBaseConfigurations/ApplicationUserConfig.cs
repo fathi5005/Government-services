@@ -4,13 +4,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Government.Data.DataBaseConfigurations
 {
-    public class UserConfig : IEntityTypeConfiguration<User>
+    public class ApplicationUserConfig : IEntityTypeConfiguration<ApplicationUser>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-          builder.HasKey(x=>x.UserID);
-            builder.Property(x=>x.UserID).ValueGeneratedOnAdd();
-
+ 
             builder.Property(x => x.Name)
                 .HasMaxLength(250)
                 .IsRequired();
@@ -21,14 +19,12 @@ namespace Government.Data.DataBaseConfigurations
               .IsRequired();
 
             builder.Property(x => x.Email)
-             .HasMaxLength(250)
-             .IsRequired();
+            .HasMaxLength(250)
+            .IsRequired();
 
             builder.Property(x => x.PhoneNumber)
              .HasMaxLength(250)
              .IsRequired();
-
-            builder.ToTable("Users");
 
         }
     }

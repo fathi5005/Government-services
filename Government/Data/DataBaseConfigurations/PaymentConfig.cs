@@ -19,6 +19,9 @@ namespace Government.Data.DataBaseConfigurations
                .IsRequired();
             builder.ToTable("Payments");
 
+            builder.Property(p => p.Amount)
+           .HasColumnType("decimal(18,2)");
+
 
         }
     }

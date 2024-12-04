@@ -5,11 +5,11 @@
 
         public int RequestID { get; set; }
         public int ServiceId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public DateTime RequestDate { get; set; }
         public string RequestStatus { get; set; }
         public string ResponseStatus { get; set; }
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
         public Service service { get; set; }
         public AdminResponse AdminResponse { get; set; }
         public ICollection<ServiceData>  serviceData { get; set; }

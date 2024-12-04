@@ -1,5 +1,11 @@
-﻿using Government.Data;
+﻿using Government.Authentication;
+using Government.Data;
+using Government.Entities;
+using Government.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Government
 {
@@ -9,9 +15,19 @@ namespace Government
 
             services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            services.AddSwagger()
-                .AddConnnectionString(configuration);
 
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>();
+
+
+            services.AddSwagger()
+                .AddConnnectionString(configuration)
+            .AddAuthConfig(configuration);
+
+            services.AddScoped<IAuthService, AuthService>();
+
+
+       
             return services;
         }
 
@@ -31,6 +47,45 @@ namespace Government
 
             services.AddDbContext<AppDbContext>(option => option.UseSqlServer(connectionstring));
 
+
+
+            return services;
+        }
+
+        public static IServiceCollection AddAuthConfig(this IServiceCollection services, IConfiguration configuration)
+        {
+
+
+            services.AddSingleton<IJwtProvider, JwtProvider>();
+
+            // services.Configure<Jwtoptions>(configuration.GetSection(nameof(Jwtoptions)));
+
+
+
+            // the same like the injection of jwtoptions
+
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(o =>
+            {
+                o.SaveToken = true;
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("J7MfAb4WcAIMkkigVtIepIILOVJEjAcB")),
+                    ValidIssuer = "_JwtoptionsIssuer",
+                    ValidAudience = "_JwtoptionsAudience"
+                };
+            });
+
+            return services;
 
 
             return services;
