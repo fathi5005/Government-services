@@ -1,10 +1,13 @@
-﻿using Government.Authentication;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Government.Authentication;
 using Government.Data;
 using Government.Entities;
 using Government.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SurvayBasket.services;
 using System.Text;
 
 namespace Government
@@ -26,8 +29,9 @@ namespace Government
 
             services.AddScoped<IAuthService, AuthService>();
 
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddFluentValidationAutoValidation();
 
-       
             return services;
         }
 
@@ -58,13 +62,6 @@ namespace Government
 
             services.AddSingleton<IJwtProvider, JwtProvider>();
 
-            // services.Configure<Jwtoptions>(configuration.GetSection(nameof(Jwtoptions)));
-
-
-
-            // the same like the injection of jwtoptions
-
-
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -80,8 +77,8 @@ namespace Government
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("J7MfAb4WcAIMkkigVtIepIILOVJEjAcB")),
-                    ValidIssuer = "_JwtoptionsIssuer",
-                    ValidAudience = "_JwtoptionsAudience"
+                    ValidIssuer = "GovernmentApp",
+                    ValidAudience = "GovernmentApp users"
                 };
             });
 

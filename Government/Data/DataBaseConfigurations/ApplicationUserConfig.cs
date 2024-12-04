@@ -18,10 +18,6 @@ namespace Government.Data.DataBaseConfigurations
               .HasMaxLength(250)
               .IsRequired();
 
-            builder.Property(x => x.Email)
-            .HasMaxLength(250)
-            .IsRequired();
-
             builder.Property(x => x.PhoneNumber)
              .HasMaxLength(250)
              .IsRequired();

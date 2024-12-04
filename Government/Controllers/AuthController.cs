@@ -17,9 +17,9 @@
 
         public async Task<IActionResult> LoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
         {
-            var authResult = await _authService.GetTokenAsync(loginRequest.Email, loginRequest.Password);
+            var authResult = await _authService.GetTokenAsync(loginRequest.Email, loginRequest.Password, cancellationToken);
 
-            return authResult is null ? BadRequest("Invalid Email/passWord") : Ok(authResult);
+            return (authResult is null) ? BadRequest("Invalid Email/passWord") : Ok(authResult);
 
 
         }

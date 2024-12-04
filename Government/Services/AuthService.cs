@@ -1,43 +1,43 @@
-﻿
-using Government.Authentication;
+﻿using Government.Authentication;
 
-namespace Government.Services
+
+namespace SurvayBasket.services
+
 {
     public class AuthService : IAuthService
     {
-        private readonly UserManager<ApplicationUser> _usermanager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtProvider _jwtProvider;
 
-        public AuthService(UserManager<ApplicationUser> Usermanager, IJwtProvider jwtProvider)
+        public AuthService(UserManager<ApplicationUser> userManager, IJwtProvider jwtProvider)
         {
-            _usermanager = Usermanager;
+            _userManager = userManager;
             _jwtProvider = jwtProvider;
         }
-        public async Task<LoginResponse> GetTokenAsync(string Email, string Password, CancellationToken cancellationToken = default!)
+        public async Task<LoginResponse?> GetTokenAsync(string Email, string Password, CancellationToken cancellationToken = default)
         {
-            // 1- check Email
 
-            var user = await _usermanager.FindByEmailAsync(Email);
-
+            var user = await _userManager.FindByEmailAsync(Email);
             if (user is null)
-            {
                 return null;
 
-            }
-            // 2- check password
-            var iSValidPassword = await _usermanager.CheckPasswordAsync(user, Password);
-            if (!iSValidPassword)
-            {
+            var IsValidPassword = await _userManager.CheckPasswordAsync(user, Password);
+            if (!IsValidPassword)
                 return null;
 
-            }
+            // generate token
 
-            // 3- generate Token
+            (string token, int expiresIn) = _jwtProvider.GenerateToken(user);
 
-            (string token, int expirein) = _jwtProvider.GenerateToken(user);
 
-            // 4- return LoginRespone
-            return new LoginResponse(user.Id, user.Name, user.Email, token, expirein);
+            return new LoginResponse(user.Id, user.Name,user.NationalId,user.PhoneNumber, user.Email!,  token, expiresIn);
+
         }
     }
 }
+/*
+ {
+   "email": "mo@test.com",
+  "password": "Pass@word123"
+} 
+ */

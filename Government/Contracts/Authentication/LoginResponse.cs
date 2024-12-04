@@ -4,9 +4,14 @@
     (
          string Id,
          string Name,
-         string Email,
+         string NationalId,
+         string PhoneNumber,
+         string Email,     
          string Token,
          int ExpireIn
 
     );
 }
+
+
+

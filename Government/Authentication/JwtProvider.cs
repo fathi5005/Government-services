@@ -25,8 +25,8 @@ namespace Government.Authentication
             var expiresIn = 30;
 
             var token = new JwtSecurityToken(
-                issuer: "_JwtoptionsIssuer",
-                audience: "_JwtoptionsAudience",
+                issuer: "GovernmentApp",
+                audience: "GovernmentApp users",
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(expiresIn),
                 signingCredentials: singingCredentials
