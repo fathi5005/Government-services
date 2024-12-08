@@ -8,12 +8,12 @@ namespace Government.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class RegisterController : ControllerBase
+    public class UserRegisterController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<AuthController> _logger;
 
-        public RegisterController(UserManager<ApplicationUser> userManager, ILogger<AuthController> logger)
+        public UserRegisterController(UserManager<ApplicationUser> userManager, ILogger<AuthController> logger)
         {
             _userManager = userManager;
             _logger = logger;

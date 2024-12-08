@@ -4,17 +4,17 @@
 namespace SurvayBasket.services
 
 {
-    public class AuthService : IAuthService
+    public class UserAuthService : IUserAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IJwtProvider _jwtProvider;
+        private readonly IUserJwtProvider _jwtProvider;
 
-        public AuthService(UserManager<ApplicationUser> userManager, IJwtProvider jwtProvider)
+        public UserAuthService(UserManager<ApplicationUser> userManager, IUserJwtProvider jwtProvider)
         {
             _userManager = userManager;
             _jwtProvider = jwtProvider;
         }
-        public async Task<LoginResponse?> GetTokenAsync(string Email, string Password, CancellationToken cancellationToken = default)
+        public async Task<LoginResponse?> GetUserTokenAsync(string Email, string Password, CancellationToken cancellationToken = default)
         {
 
             var user = await _userManager.FindByEmailAsync(Email);

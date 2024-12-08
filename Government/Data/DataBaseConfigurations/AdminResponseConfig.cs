@@ -13,12 +13,19 @@ namespace Government.Data.DataBaseConfigurations
             builder.Property(x => x.AdminResponseId).ValueGeneratedOnAdd();
 
             builder.Property(x => x.ResponseText)
-               .HasMaxLength(5000)
+               .HasMaxLength(500)
                .IsRequired();
+               
 
             builder.HasOne(x => x.Request)
             .WithOne(x => x.AdminResponse)
             .HasForeignKey<AdminResponse>(x => x.RequestId);
+
+            builder.HasOne(x => x.Admin)
+                .WithMany(x => x.AdminResponses)
+                .HasForeignKey(x => x.AdminId);
+
+            
 
             builder.ToTable("AdminResponses");
 

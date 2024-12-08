@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -6,8 +7,14 @@ using System.Text;
 
 namespace Government.Authentication
 {
-    public class JwtProvider : IJwtProvider
+    public class UserJwtProvider : IUserJwtProvider
     {
+        private readonly  JwtOption _options;
+
+        public UserJwtProvider(IOptions<JwtOption> options )
+        {
+            _options = options.Value;
+        }
         public (string token, int expireIn) GenerateToken(ApplicationUser user)
         {
             Claim[] claims = [
@@ -17,22 +24,22 @@ namespace Government.Authentication
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
        ];
 
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("J7MfAb4WcAIMkkigVtIepIILOVJEjAcB"));
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.Key));
 
             var singingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
             //
-            var expiresIn = 30;
+            var expiresMin = _options.ExpiryMinutes;
 
             var token = new JwtSecurityToken(
-                issuer: "GovernmentApp",
-                audience: "GovernmentApp users",
+                issuer: _options.Issuer,
+                audience: _options.Audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(expiresIn),
+                expires: DateTime.UtcNow.AddMinutes(expiresMin),
                 signingCredentials: singingCredentials
             );
 
-            return (token: new JwtSecurityTokenHandler().WriteToken(token), expiresIn: expiresIn * 60);
+            return (token: new JwtSecurityTokenHandler().WriteToken(token), expiresIn: expiresMin * 60);
         }
     }
 }

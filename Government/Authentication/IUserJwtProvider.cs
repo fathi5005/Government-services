@@ -1,7 +1,7 @@
 ﻿namespace Government.Authentication
 
 {
-    public interface IJwtProvider
+    public interface IUserJwtProvider
     {
 
         (string token, int expireIn) GenerateToken(ApplicationUser user);

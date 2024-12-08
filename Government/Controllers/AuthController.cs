@@ -1,4 +1,7 @@
-﻿namespace Government.Controllers
+﻿using Government.ApplicationServices;
+using Government.Authentication;
+
+namespace Government.Controllers
 
 {
     [Route("[controller]")]
@@ -6,18 +9,32 @@
     public class AuthController : ControllerBase
 
     {
-        private readonly IAuthService _authService;
+        private readonly IUserAuthService _UserauthService;
+        private readonly IAdminAuthService _adminauthService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IUserAuthService UserauthService , IAdminAuthService AdminauthService)
         {
-            _authService = authService;
+            _UserauthService = UserauthService;
+            _adminauthService = AdminauthService;
         }
 
-        [HttpPost]
+        [HttpPost("UserLogin")]
 
-        public async Task<IActionResult> LoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
+        public async Task<IActionResult> UserLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
         {
-            var authResult = await _authService.GetTokenAsync(loginRequest.Email, loginRequest.Password, cancellationToken);
+            var authResult = await _UserauthService.GetUserTokenAsync(loginRequest.Email, loginRequest.Password, cancellationToken);
+
+            return (authResult is null) ? BadRequest("Invalid Email/passWord") : Ok(authResult);
+
+
+        }
+
+
+        [HttpPost("AdminLogin")]
+
+        public async Task<IActionResult> AdminLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
+        {
+            var authResult = await _adminauthService.GetAdminTokenAsync(loginRequest.Email, loginRequest.Password, cancellationToken);
 
             return (authResult is null) ? BadRequest("Invalid Email/passWord") : Ok(authResult);
 

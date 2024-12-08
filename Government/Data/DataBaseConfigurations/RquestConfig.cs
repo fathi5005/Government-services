@@ -13,11 +13,11 @@ namespace Government.Data.DataBaseConfigurations
 
             builder.Property(x => x.RequestStatus)
                .HasMaxLength(500)
-               .IsRequired();
+               .HasDefaultValue("Pending");
 
             builder.Property(x => x.ResponseStatus)
-             .HasMaxLength(5000)
-             .IsRequired();
+             .HasMaxLength(500)
+             .HasDefaultValue("No Response");
 
             builder.HasOne(x => x.User)
                 .WithMany(x => x.Requests)

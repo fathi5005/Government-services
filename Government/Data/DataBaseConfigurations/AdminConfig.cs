@@ -23,6 +23,11 @@ namespace Government.Data.DataBaseConfigurations
                .HasMaxLength(1500)
                .IsRequired();
 
+            builder.Property(x => x.Password)
+                .HasMaxLength(50).IsRequired();
+
+
+
             builder.ToTable("Admins");
 
 

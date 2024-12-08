@@ -7,7 +7,7 @@
         public int RequestId { get; set; }
         public int AdminId { get; set; }
 
-        public string ResponseText { get; set; }
+        public string ResponseText { get; set; }  
         public DateTime ResponseDate { get; set; }
 
        

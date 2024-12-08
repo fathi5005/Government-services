@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Government.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20241204032733_alterEmail")]
-    partial class alterEmail
+    [Migration("20241208010057_DefaultValuetoadminresponsetext")]
+    partial class DefaultValuetoadminresponsetext
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,6 +43,11 @@ namespace Government.Data.Migrations
                         .HasMaxLength(1500)
                         .HasColumnType("nvarchar(1500)");
 
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
                     b.HasKey("AdminID");
 
                     b.ToTable("Admins", (string)null);
@@ -67,8 +72,10 @@ namespace Government.Data.Migrations
 
                     b.Property<string>("ResponseText")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("No Admin Reasponse");
 
                     b.HasKey("AdminResponseId");
 
@@ -253,13 +260,17 @@ namespace Government.Data.Migrations
 
                     b.Property<string>("RequestStatus")
                         .IsRequired()
+                        .ValueGeneratedOnAdd()
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(500)")
+                        .HasDefaultValue("Pending");
 
                     b.Property<string>("ResponseStatus")
                         .IsRequired()
-                        .HasMaxLength(5000)
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasDefaultValue("No Response");
 
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");

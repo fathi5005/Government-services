@@ -1,4 +1,6 @@
 
+using Government.Errors;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -19,5 +21,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseExceptionHandler();
 
 app.Run();

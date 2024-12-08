@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using System.Security.Claims;
 
 namespace Government.Data
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AppDbContext(DbContextOptions<AppDbContext> options , IHttpContextAccessor httpContextAccessor) : base(options)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public DbSet<Service> Services { get; set; }
@@ -26,5 +30,28 @@ namespace Government.Data
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder); // Ensure Identity setup is applied
         }
+
+        //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        //{
+        //    var entries = ChangeTracker.Entries<Request>();
+        //    var UserId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+        //    foreach (var entry in entries)
+        //    {
+
+        //        if (entry.State == EntityState.Added)
+        //        {
+        //            entry.Property(x => x.UserId).CurrentValue = UserId!;
+        //           // entry.Property(x => x.RequestDate).CurrentValue = DateTime.UtcNow;
+
+
+        //        }
+
+        //    }
+
+
+        //    return base.SaveChangesAsync(cancellationToken);
+        //}
     }
 }

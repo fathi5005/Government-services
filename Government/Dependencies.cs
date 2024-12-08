@@ -1,9 +1,13 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using Government.ApplicationServices;
 using Government.Authentication;
 using Government.Data;
 using Government.Entities;
+using Government.Errors;
 using Government.Services;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -16,19 +20,34 @@ namespace Government
     {
         public static IServiceCollection AddDependancy(this IServiceCollection services, IConfiguration configuration) {
 
-            services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
+            // services.AddControllers();
+            services.AddControllers();
+
+      
+
+            // using identity
             services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>();
 
+            services.AddScoped<IRequestService, RequestService>();
+            services.AddScoped<IUserAuthService, UserAuthService>();
+            services.AddScoped<IAdminAuthService, AdminAuthService>();
+            services.AddScoped<IService, service>();
+            services.AddScoped<IAdminResponseToRequest, AdminResponseToRequest>();
 
+            // Exception Handler
+            services.AddExceptionHandler<GlobalExceptionHandler>()
+                    .AddProblemDetails();
+
+            //Swagger
             services.AddSwagger()
-                .AddConnnectionString(configuration)
-            .AddAuthConfig(configuration);
-
-            services.AddScoped<IAuthService, AuthService>();
-
+                    .AddConnnectionString(configuration)
+                    .AddAuthConfig(configuration)
+                    .AddMapster();
+             
+            // fluent validation
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddFluentValidationAutoValidation();
 
@@ -60,7 +79,13 @@ namespace Government
         {
 
 
-            services.AddSingleton<IJwtProvider, JwtProvider>();
+            services.AddSingleton<IUserJwtProvider, UserJwtProvider>();
+            services.AddSingleton<IAdminJwtProvider, AdminJwtProvider>();
+
+
+            services.Configure<JwtOption>(configuration.GetSection(nameof(JwtOption)));
+            var settings = configuration.GetSection(nameof(JwtOption)).Get<JwtOption>();
+
 
             services.AddAuthentication(options =>
             {
@@ -76,16 +101,25 @@ namespace Government
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("J7MfAb4WcAIMkkigVtIepIILOVJEjAcB")),
-                    ValidIssuer = "GovernmentApp",
-                    ValidAudience = "GovernmentApp users"
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings!.Key)),
+                    ValidIssuer = settings.Issuer,
+                    ValidAudience = settings.Audience
                 };
             });
 
             return services;
 
+        }
 
-            return services;
+        private static IServiceCollection AddMapster(this IServiceCollection service)
+        {
+
+            //mapster
+            var mappingconfig = TypeAdapterConfig.GlobalSettings;
+            mappingconfig.Scan(Assembly.GetExecutingAssembly());
+            service.AddSingleton<IMapper>(new Mapper(mappingconfig));
+
+            return service;
         }
     }
 }
