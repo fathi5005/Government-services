@@ -15,7 +15,8 @@ namespace Government.Mapping
             config.NewConfig<Request, RequestsDetailstoUser>()
            .Map(dest => dest.RequestID, src => src.RequestID)
               .Map(dest => dest.ServiceName, src => src.service.ServiceName)
-              .Map(dest => dest.ResponseToThisRequestFromAdmin, src => src.AdminResponse != null ? src.AdminResponse.ResponseText : "No response yet");
+              .Map(dest => dest.ResponseText,
+                           src => src.AdminResponse != null ? src.AdminResponse.ResponseText : "No response yet");
 
 
 

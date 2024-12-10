@@ -1,4 +1,4 @@
-﻿global using Government.Services;
+﻿global using Government.ApplicationServices;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Government.Entities;
@@ -9,5 +9,7 @@ global using System.Reflection;
 global using Government.Data;
 global using Government;
 global using Government.Contracts.Authentication;
+global using Government.Abstractions;
+
 
 

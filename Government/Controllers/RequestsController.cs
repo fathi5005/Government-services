@@ -1,4 +1,5 @@
-﻿using Government.Contracts.Request;
+﻿using Government.ApplicationServices.RequestServices;
+using Government.Contracts.Request;
 using Government.Entities;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
@@ -30,15 +31,15 @@ namespace Government.Controllers
         {
 
 
-             var requestResponse = await _requestService.AddAsync(requestDto, cancellationToken);
+             var requestResponse = await _requestService.AddRequestAsync(requestDto, cancellationToken);
 
 
-            if (requestResponse is null)
+            if (!requestResponse.IsSuccess)
             {
-                return NotFound("service not found");
+                return NotFound(requestResponse.Error);
             }
 
-            return Ok(requestResponse);
+            return Ok(requestResponse.Value());
 
         }
 
@@ -49,12 +50,8 @@ namespace Government.Controllers
         {
 
             var userRequests = await _requestService.GetUserRequestsDetails(cancellationToken);
-            if (userRequests is null)
-            {
-                return NotFound(" this user does not make any requests yet");
-            }
 
-            return Ok(userRequests);
+            return Ok(userRequests.Value());
 
         }
     }

@@ -1,9 +1,9 @@
 ﻿using Government.Contracts.Services;
 using Mapster;
 
-namespace Government.ApplicationServices
+namespace Government.ApplicationServices.GovernmentServices
 {
-    
+
     public class service : IService
     {
         private readonly AppDbContext _context;
@@ -16,7 +16,7 @@ namespace Government.ApplicationServices
         {
             var services = await _context.Services.AsNoTracking().ToListAsync(cancellationToken);
             var serviceResponse = services.Adapt<IEnumerable<ServiceResponse>>();
-            return serviceResponse; 
+            return serviceResponse;
         }
     }
 }

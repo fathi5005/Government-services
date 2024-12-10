@@ -1,4 +1,6 @@
-﻿using Government.ApplicationServices;
+﻿using Government.Abstractions;
+using Government.ApplicationServices.AdminServices;
+using Government.ApplicationServices.UserServices;
 using Government.Authentication;
 
 namespace Government.Controllers
@@ -24,7 +26,7 @@ namespace Government.Controllers
         {
             var authResult = await _UserauthService.GetUserTokenAsync(loginRequest.Email, loginRequest.Password, cancellationToken);
 
-            return (authResult is null) ? BadRequest("Invalid Email/passWord") : Ok(authResult);
+            return (!authResult.IsSuccess) ? BadRequest(authResult.Error) : Ok(authResult.Value());
 
 
         }
@@ -36,7 +38,7 @@ namespace Government.Controllers
         {
             var authResult = await _adminauthService.GetAdminTokenAsync(loginRequest.Email, loginRequest.Password, cancellationToken);
 
-            return (authResult is null) ? BadRequest("Invalid Email/passWord") : Ok(authResult);
+            return (!authResult.IsSuccess) ? BadRequest(authResult.Error) : Ok(authResult.Value());
 
 
         }

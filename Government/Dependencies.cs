@@ -1,17 +1,18 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
-using Government.ApplicationServices;
+using Government.ApplicationServices.AdminServices;
+using Government.ApplicationServices.GovernmentServices;
+using Government.ApplicationServices.RequestServices;
+using Government.ApplicationServices.UserServices;
 using Government.Authentication;
 using Government.Data;
 using Government.Entities;
 using Government.Errors;
-using Government.Services;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using SurvayBasket.services;
 using System.Text;
 
 namespace Government

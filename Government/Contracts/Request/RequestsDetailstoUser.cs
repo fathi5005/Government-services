@@ -7,6 +7,6 @@
      DateTime RequestDate,
      string RequestStatus,
      string ResponseStatus,
-     string ResponseToThisRequestFromAdmin 
+     string ResponseText
      );
 }

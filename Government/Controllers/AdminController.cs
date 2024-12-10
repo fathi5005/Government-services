@@ -1,4 +1,4 @@
-﻿using Government.ApplicationServices;
+﻿using Government.ApplicationServices.AdminServices;
 using Government.Contracts.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -26,13 +26,13 @@ namespace Government.Controllers
         {
             var adminResponse = await _adminResponseToRequest.GetAdminResponseAsync(adminReply, cancellationToken);
 
-            if (adminResponse is null)
+            if (!adminResponse.IsSuccess)
             {
-
-                NotFound("Request not found.");
+              
+                return  NotFound(adminResponse.Error);
             }
 
-            return Ok(adminResponse);
+            return Ok(adminResponse.Value());
 
         }
     }

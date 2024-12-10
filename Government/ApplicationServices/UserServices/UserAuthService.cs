@@ -1,7 +1,9 @@
-﻿using Government.Authentication;
+﻿using Government.Abstractions;
+using Government.Authentication;
+using Government.Errors;
 
 
-namespace SurvayBasket.services
+namespace Government.ApplicationServices.UserServices
 
 {
     public class UserAuthService : IUserAuthService
@@ -14,30 +16,24 @@ namespace SurvayBasket.services
             _userManager = userManager;
             _jwtProvider = jwtProvider;
         }
-        public async Task<LoginResponse?> GetUserTokenAsync(string Email, string Password, CancellationToken cancellationToken = default)
+        public async Task<Result<LoginResponse>> GetUserTokenAsync(string Email, string Password, CancellationToken cancellationToken = default)
         {
 
             var user = await _userManager.FindByEmailAsync(Email);
             if (user is null)
-                return null;
+                return Result.Falire<LoginResponse>(UserAdminErrors.IvalidCredential);
 
             var IsValidPassword = await _userManager.CheckPasswordAsync(user, Password);
             if (!IsValidPassword)
-                return null;
+                return Result.Falire<LoginResponse>(UserAdminErrors.IvalidCredential);
 
-            // generate token
-
+            //Generate Token
             (string token, int expiresIn) = _jwtProvider.GenerateToken(user);
 
+            var loginResponse = new LoginResponse(user.Id, user.Name, user.NationalId, user.PhoneNumber, user.Email!, token, expiresIn);
 
-            return new LoginResponse(user.Id, user.Name,user.NationalId,user.PhoneNumber, user.Email!,  token, expiresIn);
+            return Result.Success(loginResponse);
 
         }
     }
 }
-/*
- {
-   "email": "mo@test.com",
-  "password": "Pass@word123"
-} 
- */

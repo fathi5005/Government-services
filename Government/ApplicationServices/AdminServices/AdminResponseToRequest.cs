@@ -1,9 +1,10 @@
 ﻿using Government.Contracts.Admin;
+using Government.Errors;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
-namespace Government.ApplicationServices
+namespace Government.ApplicationServices.AdminServices
 {
     public class AdminResponseToRequest : IAdminResponseToRequest
     {
@@ -13,27 +14,25 @@ namespace Government.ApplicationServices
         public AdminResponseToRequest(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
-           _httpContextAccessor = httpContextAccessor;
+            _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<AdminReplyResult> GetAdminResponseAsync(AdminReply adminReplyToREquest, CancellationToken cancellationToken = default)
+        public async Task<Result<AdminReplyResult>> GetAdminResponseAsync(AdminReply adminReplyToREquest, CancellationToken cancellationToken = default)
         {
 
-           if(adminReplyToREquest.RequestId<=0)
-            {
-                return null;
-            }
+            var request = await _context.Requests        
+                                .FirstOrDefaultAsync(r=> r.RequestID==adminReplyToREquest.RequestId ,cancellationToken);
 
-            var request = await _context.Requests.FindAsync(adminReplyToREquest.RequestId);
-            if (request == null)
-                return null; 
+            if (request is null)
+                return Result.Falire<AdminReplyResult>(RequestErrors.RequestNotFound);
 
-        
+
+
             var adminId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var AdminIdAsInt =  Convert.ToInt32(adminId);
+            var AdminIdAsInt = Convert.ToInt32(adminId);
 
 
-         
+
             var adminResponse = new AdminResponse
             {
                 RequestId = adminReplyToREquest.RequestId,
@@ -54,14 +53,14 @@ namespace Government.ApplicationServices
                 request.RequestStatus = "Rejected";
                 request.ResponseStatus = "Responded";
             }
-         
+
             await _context.SaveChangesAsync();
 
             var adminReplyResult = new AdminReplyResult(Message: "Response added and request updated successfully."
                                                       , RequestId: adminReplyToREquest.RequestId);
 
 
-            return adminReplyResult;
+            return Result.Success(adminReplyResult);
 
 
 
