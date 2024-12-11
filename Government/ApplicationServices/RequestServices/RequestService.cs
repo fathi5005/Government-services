@@ -40,7 +40,13 @@ namespace Government.ApplicationServices.RequestServices
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            var reqResponse = newrequest.Adapt<ReqResponseDto>();
+            var request = await _context.Requests
+                                    .AsNoTracking()
+                                    .Include(x => x.service)
+                                    .SingleOrDefaultAsync(r => r.RequestID == newrequest.RequestID, cancellationToken);
+                                  
+
+            var reqResponse = request.Adapt<ReqResponseDto>();
 
             return Result.Success(reqResponse);
 
