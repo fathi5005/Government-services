@@ -36,7 +36,8 @@ namespace Government.Controllers
 
             if (!requestResponse.IsSuccess)
             {
-                return NotFound(requestResponse.Error);
+                //NotFound(requestResponse.Error)
+                return requestResponse.ToProblem(statuscode:StatusCodes.Status404NotFound);
             }
 
             return Ok(requestResponse.Value());

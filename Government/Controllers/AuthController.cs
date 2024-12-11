@@ -26,7 +26,7 @@ namespace Government.Controllers
         {
             var authResult = await _UserauthService.GetUserTokenAsync(loginRequest.Email, loginRequest.Password, cancellationToken);
 
-            return (!authResult.IsSuccess) ? BadRequest(authResult.Error) : Ok(authResult.Value());
+            return (!authResult.IsSuccess) ? authResult.ToProblem(statuscode:StatusCodes.Status400BadRequest) : Ok(authResult.Value());
 
 
         }
@@ -38,7 +38,7 @@ namespace Government.Controllers
         {
             var authResult = await _adminauthService.GetAdminTokenAsync(loginRequest.Email, loginRequest.Password, cancellationToken);
 
-            return (!authResult.IsSuccess) ? BadRequest(authResult.Error) : Ok(authResult.Value());
+            return (!authResult.IsSuccess) ? authResult.ToProblem(statuscode: StatusCodes.Status400BadRequest) : Ok(authResult.Value());
 
 
         }

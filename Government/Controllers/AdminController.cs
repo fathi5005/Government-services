@@ -28,8 +28,8 @@ namespace Government.Controllers
 
             if (!adminResponse.IsSuccess)
             {
-              
-                return  NotFound(adminResponse.Error);
+               // NotFound(adminResponse.Error);
+                return adminResponse.ToProblem(statuscode:StatusCodes.Status404NotFound);
             }
 
             return Ok(adminResponse.Value());
