@@ -1,12 +1,14 @@
 ﻿namespace Government.Entities
 
 {
-    public class ApplicationUser :IdentityUser
+    public class ApplicationUser 
     {
       
-        public string Name { get; set; }
-        public string NationalId { get; set; }
-     
+        public string UserId {  get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string NationalId { get; set;}
+        public string Email { get; set; }
         public string PhoneNumber { get; set; }
      
 

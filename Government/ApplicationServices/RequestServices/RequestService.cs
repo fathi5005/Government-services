@@ -27,7 +27,12 @@ namespace Government.ApplicationServices.RequestServices
             {
                 return Result.Falire<ReqResponseDto>(ServiceError.ServiceNotFound);
             }
+
+            /**************************************************************************************/
+            /**************************************************************************************/
+
             var UserId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+           
 
             var newrequest = new Request()
             {
@@ -55,7 +60,11 @@ namespace Government.ApplicationServices.RequestServices
 
         public async Task<Result<IEnumerable<RequestsDetailstoUser>>> GetUserRequestsDetails(CancellationToken cancellationToken)
         {
+            /**************************************************************************************/
+            /**************************************************************************************/
+
             var UserId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+           
 
             var userRequests = _context.Requests
                                  .AsNoTracking()

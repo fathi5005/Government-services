@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace Government.Data
 {
-    public class AppDbContext : IdentityDbContext<ApplicationUser>
+    public class AppDbContext : IdentityDbContext<Admin>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 

@@ -2,8 +2,9 @@
 {
     public record AdminLoginResponse
         (
-        int AdminID ,
-        string AdminName, 
+        string AdminID ,
+        string FirstName, 
+        string LastName, 
         string Email,
         string Token,
         int ExpireIn

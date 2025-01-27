@@ -3,27 +3,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Government.Data.Migrations
+namespace Government.Migrations
 {
     /// <inheritdoc />
-    public partial class initial1 : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Admins",
+                name: "ApplicationUser",
                 columns: table => new
                 {
-                    AdminID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AdminName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(1500)", maxLength: 1500, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    NationalId = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Admins", x => x.AdminID);
+                    table.PrimaryKey("PK_ApplicationUser", x => x.UserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,9 +46,8 @@ namespace Government.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    NationalId = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -56,6 +56,7 @@ namespace Government.Data.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -217,10 +218,10 @@ namespace Government.Data.Migrations
                 {
                     table.PrimaryKey("PK_Requests", x => x.RequestID);
                     table.ForeignKey(
-                        name: "FK_Requests_AspNetUsers_UserId",
+                        name: "FK_Requests_ApplicationUser_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalTable: "ApplicationUser",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Requests_Services_ServiceId",
@@ -282,18 +283,18 @@ namespace Government.Data.Migrations
                     AdminResponseId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RequestId = table.Column<int>(type: "int", nullable: false),
-                    AdminId = table.Column<int>(type: "int", nullable: false),
-                    ResponseText = table.Column<string>(type: "nvarchar(max)", maxLength: 5000, nullable: false),
+                    AdminId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ResponseText = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     ResponseDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AdminResponses", x => x.AdminResponseId);
                     table.ForeignKey(
-                        name: "FK_AdminResponses_Admins_AdminId",
+                        name: "FK_AdminResponses_AspNetUsers_AdminId",
                         column: x => x.AdminId,
-                        principalTable: "Admins",
-                        principalColumn: "AdminID",
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AdminResponses_Requests_RequestId",
@@ -528,10 +529,10 @@ namespace Government.Data.Migrations
                 name: "ServiceFields");
 
             migrationBuilder.DropTable(
-                name: "Admins");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Requests");
@@ -540,7 +541,7 @@ namespace Government.Data.Migrations
                 name: "Fields");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "ApplicationUser");
 
             migrationBuilder.DropTable(
                 name: "Services");

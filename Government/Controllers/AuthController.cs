@@ -1,6 +1,6 @@
 ﻿using Government.Abstractions;
 using Government.ApplicationServices.AdminServices;
-using Government.ApplicationServices.UserServices;
+
 using Government.Authentication;
 
 namespace Government.Controllers
@@ -11,26 +11,14 @@ namespace Government.Controllers
     public class AuthController : ControllerBase
 
     {
-        private readonly IUserAuthService _UserauthService;
+      
         private readonly IAdminAuthService _adminauthService;
 
-        public AuthController(IUserAuthService UserauthService , IAdminAuthService AdminauthService)
+        public AuthController( IAdminAuthService AdminauthService)
         {
-            _UserauthService = UserauthService;
+           
             _adminauthService = AdminauthService;
         }
-
-        [HttpPost("UserLogin")]
-
-        public async Task<IActionResult> UserLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
-        {
-            var authResult = await _UserauthService.GetUserTokenAsync(loginRequest.Email, loginRequest.Password, cancellationToken);
-
-            return (!authResult.IsSuccess) ? authResult.ToProblem(statuscode:StatusCodes.Status400BadRequest) : Ok(authResult.Value());
-
-
-        }
-
 
         [HttpPost("AdminLogin")]
 

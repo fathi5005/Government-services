@@ -5,6 +5,6 @@ namespace Government.ApplicationServices.AdminServices
     public interface IAdminResponseToRequest
     {
 
-        Task<Result<AdminReplyResult>> GetAdminResponseAsync(AdminReply adminReplyToREquest, CancellationToken cancellationToken = default!);
+        Task<Result<AdminReplyResult>> AddAdminResponseAsync(AdminReply adminReplyToREquest, CancellationToken cancellationToken = default!);
     }
 }

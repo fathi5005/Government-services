@@ -8,12 +8,12 @@ namespace Government.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class UserRegisterTestController : ControllerBase
+    public class AdminRegisterController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<Admin> _userManager;
         private readonly ILogger<AuthController> _logger;
 
-        public UserRegisterTestController(UserManager<ApplicationUser> userManager, ILogger<AuthController> logger)
+        public AdminRegisterController(UserManager<Admin> userManager, ILogger<AuthController> logger)
         {
             _userManager = userManager;
             _logger = logger;
@@ -42,10 +42,10 @@ namespace Government.Controllers
             }
 
             // Create a new ApplicationUser object
-            var user = new ApplicationUser
+            var admin = new Admin
             {
-                Name = model.Name,
-                NationalId = model.NationalId,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
                 UserName = model.UserName,
                 Email = model.Email,
                 PhoneNumber = model.PhoneNumber,
@@ -59,11 +59,11 @@ namespace Government.Controllers
             };
 
             // Hash the password
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(admin, model.Password);
 
             if (result.Succeeded)
             {
-                _logger.LogInformation($"User {user.UserName} created successfully.");
+                _logger.LogInformation($"User {admin.UserName} created successfully.");
                 return Ok("User registered successfully.");
             }
 
@@ -76,13 +76,13 @@ namespace Government.Controllers
             return BadRequest(ModelState);
         }
     }
-    
+
 
     // Register model (you can extend this with more properties if needed)
     public class RegisterModel
     {
-        public string Name { get; set; }
-        public string NationalId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }

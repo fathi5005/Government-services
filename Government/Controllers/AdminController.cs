@@ -19,12 +19,10 @@ namespace Government.Controllers
 
         [HttpPost]
         [Route("CreateResponseByAdmin")]
-       // [Authorize(Policy = "AdminOnly")]
         [Authorize]
-
         public async Task<IActionResult> CreateResponseByAdmin (AdminReply adminReply , CancellationToken cancellationToken)
         {
-            var adminResponse = await _adminResponseToRequest.GetAdminResponseAsync(adminReply, cancellationToken);
+            var adminResponse = await _adminResponseToRequest.AddAdminResponseAsync(adminReply, cancellationToken);
 
             if (!adminResponse.IsSuccess)
             {

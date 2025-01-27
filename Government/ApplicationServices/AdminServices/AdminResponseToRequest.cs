@@ -16,7 +16,7 @@ namespace Government.ApplicationServices.AdminServices
             _context = context;
             _httpContextAccessor = httpContextAccessor;
         }
-        public async Task<Result<AdminReplyResult>> GetAdminResponseAsync(AdminReply adminReplyToREquest, CancellationToken cancellationToken = default)
+        public async Task<Result<AdminReplyResult>> AddAdminResponseAsync(AdminReply adminReplyToREquest, CancellationToken cancellationToken = default)
         {
 
             var request = await _context.Requests        
@@ -29,14 +29,10 @@ namespace Government.ApplicationServices.AdminServices
 
             var adminId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var AdminIdAsInt = Convert.ToInt32(adminId);
-
-
-
             var adminResponse = new AdminResponse
             {
                 RequestId = adminReplyToREquest.RequestId,
-                AdminId = AdminIdAsInt,
+                AdminId = adminId!,
                 ResponseText = adminReplyToREquest.ResponseText,
                 ResponseDate = DateTime.UtcNow
             };

@@ -19,9 +19,10 @@ namespace Government.Authentication
         public (string token, int expireIn) GenerateAdminToken(Admin admin)
         {
             Claim[] claims = [
-           new(JwtRegisteredClaimNames.Sub, admin.AdminID.ToString()),
+           new(JwtRegisteredClaimNames.Sub, admin.Id),
             new(JwtRegisteredClaimNames.Email, admin.Email!),
-            new(JwtRegisteredClaimNames.GivenName, admin.AdminName),
+            new(JwtRegisteredClaimNames.GivenName, admin.FirstName),
+            new(JwtRegisteredClaimNames.FamilyName, admin.LastName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                       ];
 
@@ -43,6 +44,6 @@ namespace Government.Authentication
             return (token: new JwtSecurityTokenHandler().WriteToken(token), expiresIn: expiresMin * 60);
         }
 
-      
+
     }
 }

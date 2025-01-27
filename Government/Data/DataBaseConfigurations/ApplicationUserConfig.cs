@@ -8,8 +8,15 @@ namespace Government.Data.DataBaseConfigurations
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
- 
-            builder.Property(x => x.Name)
+            builder.HasKey(x=>x.UserId);
+
+
+            builder.Property(x => x.FirstName)
+                .HasMaxLength(250)
+                .IsRequired();
+
+
+            builder.Property(x => x.LastName)
                 .HasMaxLength(250)
                 .IsRequired();
 
@@ -21,6 +28,11 @@ namespace Government.Data.DataBaseConfigurations
             builder.Property(x => x.PhoneNumber)
              .HasMaxLength(250)
              .IsRequired();
+
+
+            builder.Property(x => x.Email)
+                .HasMaxLength(500)
+                .IsRequired();
 
         }
     }

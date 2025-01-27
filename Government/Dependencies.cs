@@ -3,7 +3,6 @@ using FluentValidation.AspNetCore;
 using Government.ApplicationServices.AdminServices;
 using Government.ApplicationServices.GovernmentServices;
 using Government.ApplicationServices.RequestServices;
-using Government.ApplicationServices.UserServices;
 using Government.Authentication;
 using Government.Data;
 using Government.Entities;
@@ -29,11 +28,10 @@ namespace Government
       
 
             // using identity
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<Admin, IdentityRole>()
             .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddScoped<IRequestService, RequestService>();
-            services.AddScoped<IUserAuthService, UserAuthService>();
             services.AddScoped<IAdminAuthService, AdminAuthService>();
             services.AddScoped<IService, service>();
             services.AddScoped<IAdminResponseToRequest, AdminResponseToRequest>();
@@ -80,7 +78,7 @@ namespace Government
         {
 
 
-            services.AddSingleton<IUserJwtProvider, UserJwtProvider>();
+      
             services.AddSingleton<IAdminJwtProvider, AdminJwtProvider>();
 
 
