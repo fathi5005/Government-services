@@ -1,5 +1,7 @@
-﻿using Government.ApplicationServices.RequestServices;
+﻿using Government.ApplicationServices.GetFields;
+using Government.ApplicationServices.RequestServices;
 using Government.Contracts.Request;
+using Government.Contracts.Request.Submiting;
 using Government.Entities;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
@@ -10,43 +12,20 @@ using System.Security.Claims;
 
 namespace Government.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class RequestsController : ControllerBase
+    [Authorize]
+    public class RequestsController(IRequestService requestService, AppDbContext context, IFieldService fieldService) : ControllerBase
     {
-        private readonly IRequestService _requestService;
-        private readonly AppDbContext _context;
+        private readonly IRequestService _requestService = requestService;
+        private readonly AppDbContext _context = context;
+        private readonly IFieldService fieldService = fieldService;
 
-
-        public RequestsController(IRequestService requestService, AppDbContext context)
-        {
-            _requestService = requestService;
-            _context = context;
-        }
-
-        [HttpPost]
-        [Route("{ServiceId}")]
-        [Authorize]
-        public async Task<IActionResult> AddRequest([FromBody] RequestDto requestDto, CancellationToken cancellationToken)
-        {
-
-
-             var requestResponse = await _requestService.AddRequestAsync(requestDto, cancellationToken);
-
-
-            if (!requestResponse.IsSuccess)
-            {
-                //NotFound(requestResponse.Error)
-                return requestResponse.ToProblem(statuscode:StatusCodes.Status404NotFound);
-            }
-
-            return Ok(requestResponse.Value());
-
-        }
+       
 
 
         [HttpGet("GetUserRequestsById")]
-        [Authorize]
+       
         public async Task<IActionResult> GetUserRequests(CancellationToken cancellationToken)
         {
 
@@ -55,6 +34,68 @@ namespace Government.Controllers
             return Ok(userRequests.Value());
 
         }
+
+
+
+        [HttpGet("{requestId}")]
+
+        public async Task<IActionResult> GetRequest([FromRoute] int requestId,CancellationToken cancellationToken)
+        {
+
+            var result = await _requestService.GetRequestAsync(requestId, cancellationToken);
+
+            return result.IsSuccess ? Ok(result.Value()): result.ToProblem(statuscode:StatusCodes.Status404NotFound);
+
+        }
+
+
+
+        [HttpGet("")]
+
+        public async Task<IActionResult> GetRequestByStatus([FromBody] RequestStatus requestStatus, CancellationToken cancellationToken)
+        {
+
+            var result = await _requestService.GetRequestByStatusAsync(requestStatus, cancellationToken);
+
+            return Ok(result.Value());
+        }
+
+
+        [HttpGet]
+        [Route("{serviceId}/fields")]
+        public async Task<IActionResult> GetFields([FromRoute] int serviceId, CancellationToken cancellationToken)
+        {
+
+            var result = await fieldService.GetFieldAsync(serviceId, cancellationToken);
+
+            return result.IsSuccess ?
+                        Ok(result.Value())
+                      : result.ToProblem(statuscode: StatusCodes.Status404NotFound);
+        }
+
+        [HttpGet]
+        [Route("{serviceId}/documents")]
+        public async Task<IActionResult> GetDocuments([FromRoute] int serviceId, CancellationToken cancellationToken)
+        {
+
+            var result = await fieldService.GetDocumentsAsync(serviceId, cancellationToken);
+
+            return result.IsSuccess ?
+                        Ok(result.Value())
+                      : result.ToProblem(statuscode: StatusCodes.Status404NotFound);
+        }
+
+
+        [HttpPost("submit")]
+        [AllowAnonymous]
+        public async Task<IActionResult> SubmitServiceRequest([FromForm] SubmitRequestDto requestDto , CancellationToken cancellationToken)
+        {
+            var result = await _requestService.SubmitRequestAsync(requestDto, cancellationToken);
+
+            return result.IsSuccess ? Ok(result.Value()) : result.ToProblem(statuscode: StatusCodes.Status500InternalServerError);
+
+        }
+
     }
 }
 

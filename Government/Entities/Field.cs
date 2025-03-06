@@ -2,13 +2,11 @@
 {
     public class Field
     {
-        public int FieldID { get; set; }
-        public string FiledName { get; set; }
-        public string Description { get; set; }
-
-
-        public ICollection<ServiceData> ServiceData { get; set; }
-        public ICollection<Service> Services{ get; set; }
-        public ICollection<ServiceField> ServiceFields { get; set; }
+        public int Id { get; set; }
+        public string FiledName { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public ICollection<ServiceData> ServiceData { get; set; } = [];
+        public ICollection<Service> Services { get; set; } = [];
+        public ICollection<ServiceField> ServiceFields { get; set; } = [];
     }
 }

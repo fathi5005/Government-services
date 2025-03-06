@@ -2,11 +2,11 @@
 {
     public class ServiceField
     {
+        public int Id { get; set; }
+        public int FieldId { get; set; }
+        public int ServiceId { get; set; }
 
-        public int FieldID { get; set; }
-        public int ServiceID { get; set; }
-
-        public Service service { get; set; }
-        public Field Field { get; set; }
+        public Service service { get; set; } = default!;
+        public Field Field { get; set; } = default!;
     }
 }

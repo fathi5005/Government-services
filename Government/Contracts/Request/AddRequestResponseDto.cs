@@ -1,6 +1,6 @@
 ﻿namespace Government.Contracts.Request
 {
-    public record ReqResponseDto
+    public record AddRequestResponseDto
         (
         int RequestID,
         string ServiceName,
@@ -10,3 +10,5 @@
         );
     
 }
+
+

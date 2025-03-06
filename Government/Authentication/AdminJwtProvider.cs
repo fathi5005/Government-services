@@ -16,13 +16,13 @@ namespace Government.Authentication
         {
             _options = options.Value;
         }
-        public (string token, int expireIn) GenerateAdminToken(Admin admin)
+        public (string token, int expireIn) GenerateAdminToken(AppUser user )
         {
             Claim[] claims = [
-           new(JwtRegisteredClaimNames.Sub, admin.Id),
-            new(JwtRegisteredClaimNames.Email, admin.Email!),
-            new(JwtRegisteredClaimNames.GivenName, admin.FirstName),
-            new(JwtRegisteredClaimNames.FamilyName, admin.LastName),
+           new(JwtRegisteredClaimNames.Sub, user.Id),
+            new(JwtRegisteredClaimNames.Email, user.Email!),
+            new(JwtRegisteredClaimNames.GivenName, user.FirstName),
+            new(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                       ];
 
@@ -41,7 +41,7 @@ namespace Government.Authentication
                 signingCredentials: singingCredentials
             );
 
-            return (token: new JwtSecurityTokenHandler().WriteToken(token), expiresIn: expiresMin * 60);
+            return (token: new JwtSecurityTokenHandler().WriteToken(token), expireIn: expiresMin * 60);
         }
 
 

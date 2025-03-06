@@ -9,8 +9,7 @@ namespace Government.Data.DataBaseConfigurations
 
         public void Configure(EntityTypeBuilder<AdminResponse> builder)
         {
-            builder.HasKey(x => x.AdminResponseId);
-            builder.Property(x => x.AdminResponseId).ValueGeneratedOnAdd();
+         
 
             builder.Property(x => x.ResponseText)
                .HasMaxLength(500)
@@ -20,12 +19,6 @@ namespace Government.Data.DataBaseConfigurations
             builder.HasOne(x => x.Request)
             .WithOne(x => x.AdminResponse)
             .HasForeignKey<AdminResponse>(x => x.RequestId);
-
-            builder.HasOne(x => x.Admin)
-                .WithMany(x => x.AdminResponses)
-                .HasForeignKey(x => x.AdminId);
-
-            
 
             builder.ToTable("AdminResponses");
 

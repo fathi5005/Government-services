@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace Government.Data
 {
-    public class AppDbContext : IdentityDbContext<Admin>
+    public class AppDbContext : IdentityDbContext<AppUser>
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -21,14 +21,21 @@ namespace Government.Data
         public DbSet<RequiredDocument> RequiredDocuments { get; set; }
         public DbSet<Request> Requests { get; set; }
         public DbSet<AttachedDocument> AttachedDocuments { get; set; }
-        public DbSet<Admin> Admins { get; set; }
         public DbSet<AdminResponse> AdminsResponse { get; set; }
         public DbSet<Payment> Payments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-            base.OnModelCreating(modelBuilder); // Ensure Identity setup is applied
+            base.OnModelCreating(modelBuilder); // Ensure this line is included to call the base implementation
+
+
+            var cascadedfks = modelBuilder.Model.GetEntityTypes()
+                             .SelectMany(x => x.GetForeignKeys())
+                             .Where(fk => fk.DeleteBehavior == DeleteBehavior.Cascade && !fk.IsOwnership);
+            foreach (var fk in cascadedfks)
+                fk.DeleteBehavior = DeleteBehavior.Restrict;
+
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly()); // Ensure Identity setup is applied
         }
 
         //public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

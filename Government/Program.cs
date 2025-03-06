@@ -24,4 +24,6 @@ app.MapControllers();
 
 app.UseExceptionHandler();
 
+app.UseStaticFiles();
+
 app.Run();

@@ -2,7 +2,7 @@
 {
     public interface IAdminJwtProvider
     {
-        (string token, int expireIn) GenerateAdminToken(Admin admin);
+        (string token, int expireIn) GenerateAdminToken(AppUser admin);
 
     }
 }

@@ -8,8 +8,6 @@ namespace Government.Data.DataBaseConfigurations
     {
         public void Configure(EntityTypeBuilder<ServiceData> builder)
         {
-            builder.HasKey(x => x.ServiceDataID);
-            builder.Property(x => x.ServiceDataID).ValueGeneratedOnAdd();
 
             builder.Property(x => x.FieldValueString)
                     .HasMaxLength(250)

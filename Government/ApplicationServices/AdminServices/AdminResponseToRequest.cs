@@ -20,7 +20,7 @@ namespace Government.ApplicationServices.AdminServices
         {
 
             var request = await _context.Requests        
-                                .FirstOrDefaultAsync(r=> r.RequestID==adminReplyToREquest.RequestId ,cancellationToken);
+                                .FirstOrDefaultAsync(r=> r.Id==adminReplyToREquest.RequestId ,cancellationToken);
 
             if (request is null)
                 return Result.Falire<AdminReplyResult>(RequestErrors.RequestNotFound);
@@ -32,7 +32,7 @@ namespace Government.ApplicationServices.AdminServices
             var adminResponse = new AdminResponse
             {
                 RequestId = adminReplyToREquest.RequestId,
-                AdminId = adminId!,
+                userId = adminId!,
                 ResponseText = adminReplyToREquest.ResponseText,
                 ResponseDate = DateTime.UtcNow
             };

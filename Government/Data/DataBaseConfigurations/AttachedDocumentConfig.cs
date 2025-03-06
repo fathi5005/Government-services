@@ -9,18 +9,21 @@ namespace Government.Data.DataBaseConfigurations
 
         public void Configure(EntityTypeBuilder<AttachedDocument> builder)
         {
-            builder.HasKey(x => x.AttachedDocumentID);
-            builder.Property(x => x.AttachedDocumentID).ValueGeneratedOnAdd();
 
             builder.Property(x => x.FileName)
-               .HasMaxLength(500)
+               .HasMaxLength(150)
                .IsRequired();
 
-            builder.Property(x => x.FilePath)
-             .HasMaxLength(5000)
-             .IsRequired();
+            builder.Property(x => x.FileUrl)
+          .HasMaxLength(5000)
+          .IsRequired();
 
-            builder.ToTable("AttachedDocuments");
+
+            builder.Property(x => x.DocumentType)
+              .HasMaxLength(5000)
+              .IsRequired();
+
+        builder.ToTable("AttachedDocuments");
 
         }
     }

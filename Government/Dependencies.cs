@@ -1,17 +1,21 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Government.ApplicationServices.AdminServices;
+using Government.ApplicationServices.GetFields;
 using Government.ApplicationServices.GovernmentServices;
 using Government.ApplicationServices.RequestServices;
+using Government.ApplicationServices.Results;
 using Government.Authentication;
-using Government.Data;
-using Government.Entities;
 using Government.Errors;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Identity.UI.Services;
+
 using Microsoft.IdentityModel.Tokens;
+using SurvayBasket.ApplicationServices.SendingEmail;
+using SurvayBasket.ApplicationServices.UserAccount;
+using SurvayBasket.Settigns.cs;
 using System.Text;
 
 namespace Government
@@ -25,16 +29,21 @@ namespace Government
             // services.AddControllers();
             services.AddControllers();
 
-      
+
 
             // using identity
-            services.AddIdentity<Admin, IdentityRole>()
-            .AddEntityFrameworkStores<AppDbContext>();
+            services.AddIdentity<AppUser, IdentityRole>()
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
 
             services.AddScoped<IRequestService, RequestService>();
             services.AddScoped<IAdminAuthService, AdminAuthService>();
             services.AddScoped<IService, service>();
             services.AddScoped<IAdminResponseToRequest, AdminResponseToRequest>();
+            services.AddScoped<IFieldService, FieldService>();
+            services.AddScoped<IEmailSender, EmailService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IDashboardService, DashboardService>();
 
             // Exception Handler
             services.AddExceptionHandler<GlobalExceptionHandler>()
@@ -49,6 +58,9 @@ namespace Government
             // fluent validation
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddFluentValidationAutoValidation();
+
+
+            services.Configure<EmailSettings>(configuration.GetSection(nameof(EmailSettings)));
 
             return services;
         }
@@ -81,9 +93,15 @@ namespace Government
       
             services.AddSingleton<IAdminJwtProvider, AdminJwtProvider>();
 
+            /* option pattern configurations */
+           // services.Configure<JwtOption>(configuration.GetSection(nameof(JwtOption)));
 
-            services.Configure<JwtOption>(configuration.GetSection(nameof(JwtOption)));
-            var settings = configuration.GetSection(nameof(JwtOption)).Get<JwtOption>();
+            services.AddOptions<JwtOption>()
+                    .BindConfiguration(nameof(JwtOption))
+                    .ValidateDataAnnotations()
+                    .ValidateOnStart();
+
+            var Jwtsettings = configuration.GetSection(nameof(JwtOption)).Get<JwtOption>();
 
 
             services.AddAuthentication(options =>
@@ -100,9 +118,9 @@ namespace Government
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings!.Key)),
-                    ValidIssuer = settings.Issuer,
-                    ValidAudience = settings.Audience
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Jwtsettings!.Key)),
+                    ValidIssuer = Jwtsettings.Issuer,
+                    ValidAudience = Jwtsettings.Audience
                 };
             });
 

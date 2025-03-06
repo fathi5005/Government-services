@@ -4,24 +4,19 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Government.Data.DataBaseConfigurations
 {
-    public class AdminConfig : IEntityTypeConfiguration<Admin>
+    public class AppUserConfiguration : IEntityTypeConfiguration<AppUser>
     {
 
-        public void Configure(EntityTypeBuilder<Admin> builder)
+        public void Configure(EntityTypeBuilder<AppUser> builder)
         {
             builder.Property(x => x.FirstName)
-                .HasMaxLength(500)
+                .HasMaxLength(100)
                 .IsRequired();
 
             builder.Property(x => x.LastName)
-                .HasMaxLength(500)
+                .HasMaxLength(100)
                 .IsRequired();
 
-
-
-
-
-            builder.ToTable("Admins");
 
 
         }

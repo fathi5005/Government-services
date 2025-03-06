@@ -1,12 +1,16 @@
 ﻿using Government.Contracts.Request;
+using Government.Contracts.Request.Submiting;
 
 namespace Government.ApplicationServices.RequestServices
 {
     public interface IRequestService
     {
 
-        Task<Result <ReqResponseDto>> AddRequestAsync(RequestDto requestDto, CancellationToken cancellationToken);
+       // Task<Result <AddRequestResponseDto>> AddRequestAsync(AddRequestDto requestDto, CancellationToken cancellationToken);
         Task<Result<IEnumerable<RequestsDetailstoUser>>> GetUserRequestsDetails(CancellationToken cancellationToken);
+        Task<Result<RequestDetailsResponse>> GetRequestAsync(int requestId, CancellationToken cancellationToken);
+        Task<Result<IEnumerable<RequestsDetailstoUser>>> GetRequestByStatusAsync(RequestStatus request, CancellationToken cancellationToken);
+        Task<Result <SubmitResponseDto>> SubmitRequestAsync(SubmitRequestDto requestDto, CancellationToken cancellationToken);
 
     }
 }

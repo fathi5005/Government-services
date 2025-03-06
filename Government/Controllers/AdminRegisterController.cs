@@ -10,10 +10,10 @@ namespace Government.Controllers
     [ApiController]
     public class AdminRegisterController : ControllerBase
     {
-        private readonly UserManager<Admin> _userManager;
+        private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<AuthController> _logger;
 
-        public AdminRegisterController(UserManager<Admin> userManager, ILogger<AuthController> logger)
+        public AdminRegisterController(UserManager<AppUser> userManager, ILogger<AuthController> logger)
         {
             _userManager = userManager;
             _logger = logger;
@@ -42,7 +42,7 @@ namespace Government.Controllers
             }
 
             // Create a new ApplicationUser object
-            var admin = new Admin
+            var admin = new AppUser
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,

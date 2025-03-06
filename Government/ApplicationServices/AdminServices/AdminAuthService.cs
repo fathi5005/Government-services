@@ -7,9 +7,9 @@ namespace Government.ApplicationServices.AdminServices
     {
         private readonly AppDbContext _context;
         private readonly IAdminJwtProvider _jwtProvider;
-        private readonly UserManager<Admin> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AdminAuthService(AppDbContext context, IAdminJwtProvider jwtProvider,UserManager<Admin> userManager)
+        public AdminAuthService(AppDbContext context, IAdminJwtProvider jwtProvider,UserManager<AppUser> userManager)
         {
             _context = context;
             _jwtProvider = jwtProvider;
@@ -17,21 +17,21 @@ namespace Government.ApplicationServices.AdminServices
         }
         public async Task<Result<AdminLoginResponse>> GetAdminTokenAsync(string Email, string Password, CancellationToken cancellationToken = default)
         {
-            var _admin = await _userManager.FindByEmailAsync(Email);
+            var user = await _userManager.FindByEmailAsync(Email);
 
-            if (_admin==null)
+            if (user == null)
                 return Result.Falire<AdminLoginResponse>(UserAdminErrors.IvalidCredential);
 
-            var IsValidPassword = await _userManager.CheckPasswordAsync(_admin, Password);
+            var IsValidPassword = await _userManager.CheckPasswordAsync(user, Password);
 
             if (!IsValidPassword)
                 return Result.Falire<AdminLoginResponse>(UserAdminErrors.IvalidCredential);
 
 
             // generate token
-            (string token, int expiresIn) = _jwtProvider.GenerateAdminToken(_admin!);
+            (string token, int expiresIn) = _jwtProvider.GenerateAdminToken(user!);
 
-            var adminLoginResponse = new AdminLoginResponse(_admin.Id, _admin.FirstName,_admin.LastName, _admin.Email!, token, expiresIn);
+            var adminLoginResponse = new AdminLoginResponse(user.Id, user.FirstName, user.LastName, user.Email!, token, expiresIn);
 
             return Result.Success(adminLoginResponse);
 

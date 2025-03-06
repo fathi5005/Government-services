@@ -9,18 +9,17 @@ namespace Government.Data.DataBaseConfigurations
 
         public void Configure(EntityTypeBuilder<Payment> builder)
         {
-            builder.HasKey(x => x.PaymentID);
-            builder.Property(x => x.PaymentID).ValueGeneratedOnAdd();
-
-
 
             builder.Property(x => x.PaymentStatus)
                .HasMaxLength(500)
                .IsRequired();
-            builder.ToTable("Payments");
+
 
             builder.Property(p => p.Amount)
-           .HasColumnType("decimal(18,2)");
+           .HasColumnType("decimal(10,2)");
+
+            builder.ToTable("Payments");
+
 
 
         }

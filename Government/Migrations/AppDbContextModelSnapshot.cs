@@ -22,7 +22,40 @@ namespace Government.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Government.Entities.Admin", b =>
+            modelBuilder.Entity("Government.Entities.AdminResponse", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("RequestId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ResponseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ResponseText")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("userId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestId")
+                        .IsUnique();
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("AdminResponses", (string)null);
+                });
+
+            modelBuilder.Entity("Government.Entities.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -43,13 +76,13 @@ namespace Government.Migrations
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -97,96 +130,39 @@ namespace Government.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Government.Entities.AdminResponse", b =>
-                {
-                    b.Property<int>("AdminResponseId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdminResponseId"));
-
-                    b.Property<string>("AdminId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("RequestId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("ResponseDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ResponseText")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("AdminResponseId");
-
-                    b.HasIndex("AdminId");
-
-                    b.HasIndex("RequestId")
-                        .IsUnique();
-
-                    b.ToTable("AdminResponses", (string)null);
-                });
-
-            modelBuilder.Entity("Government.Entities.ApplicationUser", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("NationalId")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("ApplicationUser");
-                });
-
             modelBuilder.Entity("Government.Entities.AttachedDocument", b =>
                 {
-                    b.Property<int>("AttachedDocumentID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AttachedDocumentID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("FilePath")
+                    b.Property<string>("DocumentType")
                         .IsRequired()
                         .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsVerified")
+                        .HasColumnType("bit");
+
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
 
-                    b.HasKey("AttachedDocumentID");
+                    b.Property<DateTime>("UploadedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("RequestId");
 
@@ -195,11 +171,11 @@ namespace Government.Migrations
 
             modelBuilder.Entity("Government.Entities.Field", b =>
                 {
-                    b.Property<int>("FieldID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FieldID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -211,24 +187,206 @@ namespace Government.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.HasKey("FieldID");
+                    b.HasKey("Id");
 
                     b.HasIndex("FiledName")
                         .IsUnique();
 
                     b.ToTable("Fields", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Enter your full name as per official records.",
+                            FiledName = "Full Name"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Select your date of birth.",
+                            FiledName = "Date of Birth"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Provide your national ID number.",
+                            FiledName = "National ID Number"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Enter your passport number.",
+                            FiledName = "Passport Number"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Enter your residential address.",
+                            FiledName = "Address"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "Provide a valid phone number.",
+                            FiledName = "Phone Number"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "Provide your email for notifications.",
+                            FiledName = "Email Address"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Select your marital status.",
+                            FiledName = "Marital Status"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "Enter your spouse’s full name (if married).",
+                            FiledName = "Spouse Name"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Enter your vehicle registration number.",
+                            FiledName = "Vehicle Registration Number"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "Enter your driver’s license number.",
+                            FiledName = "Driving License Number"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "Specify your employment status.",
+                            FiledName = "Employment Status"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "Enter the name of your employer or company.",
+                            FiledName = "Company Name"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "Provide your estimated annual income.",
+                            FiledName = "Annual Income"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "Enter your tax ID number.",
+                            FiledName = "Tax Identification Number"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "Select your nationality.",
+                            FiledName = "Nationality"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "Enter your place of birth.",
+                            FiledName = "Place of Birth"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "Select your highest level of education.",
+                            FiledName = "Education Level"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "Provide your medical insurance number.",
+                            FiledName = "Medical Insurance Number"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "Select your blood type.",
+                            FiledName = "Blood Type"
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Description = "Enter the name of your emergency contact.",
+                            FiledName = "Emergency Contact Name"
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Description = "Provide the phone number of your emergency contact.",
+                            FiledName = "Emergency Contact Phone"
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Description = "Enter your property ownership certificate number.",
+                            FiledName = "Property Ownership Number"
+                        },
+                        new
+                        {
+                            Id = 24,
+                            Description = "Provide your work permit number (if applicable).",
+                            FiledName = "Work Permit Number"
+                        },
+                        new
+                        {
+                            Id = 25,
+                            Description = "Enter your residency permit number.",
+                            FiledName = "Residency Permit Number"
+                        },
+                        new
+                        {
+                            Id = 26,
+                            Description = "Enter your business license registration number.",
+                            FiledName = "Business License Number"
+                        },
+                        new
+                        {
+                            Id = 27,
+                            Description = "Specify the number of dependents you have.",
+                            FiledName = "Number of Dependents"
+                        },
+                        new
+                        {
+                            Id = 28,
+                            Description = "Enter your bank account number.",
+                            FiledName = "Bank Account Number"
+                        },
+                        new
+                        {
+                            Id = 29,
+                            Description = "Select your preferred language for communication.",
+                            FiledName = "Preferred Language"
+                        },
+                        new
+                        {
+                            Id = 30,
+                            Description = "Enter your previous passport number (if applicable).",
+                            FiledName = "Previous Passport Number"
+                        });
                 });
 
             modelBuilder.Entity("Government.Entities.Payment", b =>
                 {
-                    b.Property<int>("PaymentID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -241,7 +399,7 @@ namespace Government.Migrations
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
 
-                    b.HasKey("PaymentID");
+                    b.HasKey("Id");
 
                     b.HasIndex("RequestId");
 
@@ -250,11 +408,11 @@ namespace Government.Migrations
 
             modelBuilder.Entity("Government.Entities.Request", b =>
                 {
-                    b.Property<int>("RequestID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequestID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("RequestDate")
                         .HasColumnType("datetime2");
@@ -280,7 +438,7 @@ namespace Government.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("RequestID");
+                    b.HasKey("Id");
 
                     b.HasIndex("ServiceId");
 
@@ -291,26 +449,38 @@ namespace Government.Migrations
 
             modelBuilder.Entity("Government.Entities.RequiredDocument", b =>
                 {
-                    b.Property<int>("RequiredDocumentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RequiredDocumentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DocumentType")
+                        .IsRequired()
+                        .HasMaxLength(5000)
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("FilePath")
+                    b.Property<string>("FileUrl")
                         .IsRequired()
                         .HasMaxLength(5000)
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsMandatory")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
 
-                    b.HasKey("RequiredDocumentId");
+                    b.HasKey("Id");
 
                     b.HasIndex("FileName")
                         .IsUnique();
@@ -318,15 +488,233 @@ namespace Government.Migrations
                     b.HasIndex("ServiceId");
 
                     b.ToTable("RequiredDocuments", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "A copy of a valid passport to verify identity.",
+                            DocumentType = "Identification",
+                            FileName = "Passport Copy",
+                            FileUrl = "https://gov.com/docs/passport_copy.pdf",
+                            IsMandatory = true,
+                            ServiceId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "A copy of the previous passport, if applicable, for verification.",
+                            DocumentType = "Previous Document",
+                            FileName = "Old Passport",
+                            FileUrl = "https://gov.com/docs/old_passport.pdf",
+                            IsMandatory = true,
+                            ServiceId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "A scanned copy of the national ID card for identity confirmation.",
+                            DocumentType = "Identification",
+                            FileName = "National ID Copy",
+                            FileUrl = "https://gov.com/docs/national_id.pdf",
+                            IsMandatory = true,
+                            ServiceId = 2
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "A medical certificate proving health status, issued by an authorized medical institution.",
+                            DocumentType = "Health",
+                            FileName = "Medical Certificate",
+                            FileUrl = "https://gov.com/docs/medical_certificate.pdf",
+                            IsMandatory = true,
+                            ServiceId = 2
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "An official document proving ownership of the vehicle.",
+                            DocumentType = "Ownership Proof",
+                            FileName = "Vehicle Title",
+                            FileUrl = "https://gov.com/docs/vehicle_title.pdf",
+                            IsMandatory = true,
+                            ServiceId = 3
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Description = "A valid insurance certificate covering the vehicle.",
+                            DocumentType = "Insurance",
+                            FileName = "Insurance Certificate",
+                            FileUrl = "https://gov.com/docs/insurance.pdf",
+                            IsMandatory = true,
+                            ServiceId = 3
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Description = "A certified copy of the marriage contract for legal purposes.",
+                            DocumentType = "Legal",
+                            FileName = "Marriage Contract",
+                            FileUrl = "https://gov.com/docs/marriage_contract.pdf",
+                            IsMandatory = true,
+                            ServiceId = 4
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Description = "Copies of the national ID cards of both spouses for verification.",
+                            DocumentType = "Identification",
+                            FileName = "National ID Copies",
+                            FileUrl = "https://gov.com/docs/nid_copies.pdf",
+                            IsMandatory = true,
+                            ServiceId = 4
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Description = "An official hospital birth record confirming birth details.",
+                            DocumentType = "Medical",
+                            FileName = "Hospital Birth Record",
+                            FileUrl = "https://gov.com/docs/birth_record.pdf",
+                            IsMandatory = true,
+                            ServiceId = 5
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Description = "Copies of both parents' national ID cards for identity verification.",
+                            DocumentType = "Identification",
+                            FileName = "Parents ID Copies",
+                            FileUrl = "https://gov.com/docs/parents_id.pdf",
+                            IsMandatory = true,
+                            ServiceId = 5
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Description = "A certified copy of the birth certificate for identity confirmation.",
+                            DocumentType = "Identification",
+                            FileName = "Birth Certificate",
+                            FileUrl = "https://gov.com/docs/birth_certificate.pdf",
+                            IsMandatory = true,
+                            ServiceId = 6
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Description = "An official document verifying the applicant's residential address.",
+                            DocumentType = "Address Verification",
+                            FileName = "Proof of Residence",
+                            FileUrl = "https://gov.com/docs/proof_residence.pdf",
+                            IsMandatory = true,
+                            ServiceId = 6
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Description = "An official business registration document confirming legal status.",
+                            DocumentType = "Legal",
+                            FileName = "Business Registration Form",
+                            FileUrl = "https://gov.com/docs/business_registration.pdf",
+                            IsMandatory = true,
+                            ServiceId = 7
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Description = "A tax clearance certificate proving tax compliance.",
+                            DocumentType = "Tax",
+                            FileName = "Tax Clearance Certificate",
+                            FileUrl = "https://gov.com/docs/tax_clearance.pdf",
+                            IsMandatory = true,
+                            ServiceId = 7
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Description = "A signed employment contract detailing job terms and conditions.",
+                            DocumentType = "Legal",
+                            FileName = "Employment Contract",
+                            FileUrl = "https://gov.com/docs/employment_contract.pdf",
+                            IsMandatory = true,
+                            ServiceId = 8
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Description = "An official company license issued by the regulatory authority.",
+                            DocumentType = "Business",
+                            FileName = "Company License",
+                            FileUrl = "https://gov.com/docs/company_license.pdf",
+                            IsMandatory = true,
+                            ServiceId = 8
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Description = "A copy of the residency card confirming residency status.",
+                            DocumentType = "Identification",
+                            FileName = "Residency Card Copy",
+                            FileUrl = "https://gov.com/docs/residency_card.pdf",
+                            IsMandatory = true,
+                            ServiceId = 9
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Description = "A valid rental agreement proving residency at the stated address.",
+                            DocumentType = "Proof of Address",
+                            FileName = "Rental Agreement",
+                            FileUrl = "https://gov.com/docs/rental_agreement.pdf",
+                            IsMandatory = true,
+                            ServiceId = 9
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Description = "A completed tax application form for tax registration.",
+                            DocumentType = "Tax",
+                            FileName = "Tax Application Form",
+                            FileUrl = "https://gov.com/docs/tax_application.pdf",
+                            IsMandatory = true,
+                            ServiceId = 10
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Description = "An official document proving the applicant's income source.",
+                            DocumentType = "Financial",
+                            FileName = "Proof of Income",
+                            FileUrl = "https://gov.com/docs/proof_income.pdf",
+                            IsMandatory = true,
+                            ServiceId = 10
+                        });
                 });
 
             modelBuilder.Entity("Government.Entities.Service", b =>
                 {
-                    b.Property<int>("ServiceID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContactInfo")
+                        .IsRequired()
+                        .HasMaxLength(1500)
+                        .HasColumnType("nvarchar(1500)");
+
+                    b.Property<decimal>("Fee")
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ProcessingTime")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<string>("ServiceDescription")
                         .IsRequired()
@@ -338,7 +726,7 @@ namespace Government.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.HasKey("ServiceID");
+                    b.HasKey("Id");
 
                     b.HasIndex("ServiceDescription")
                         .IsUnique();
@@ -347,17 +735,119 @@ namespace Government.Migrations
                         .IsUnique();
 
                     b.ToTable("Services", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ContactInfo = "support@gov.com",
+                            Fee = 50.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "5 business days",
+                            ServiceDescription = "Renew your passport quickly and easily.",
+                            ServiceName = "Passport Renewal"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ContactInfo = "dmv@gov.com",
+                            Fee = 30.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "7 business days",
+                            ServiceDescription = "Apply for a new driver’s license.",
+                            ServiceName = "Driver’s License Issuance"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ContactInfo = "transport@gov.com",
+                            Fee = 40.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "3 business days",
+                            ServiceDescription = "Register your vehicle with the transport department.",
+                            ServiceName = "Vehicle Registration"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ContactInfo = "civilstatus@gov.com",
+                            Fee = 20.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "4 business days",
+                            ServiceDescription = "Request an official marriage certificate.",
+                            ServiceName = "Marriage Certificate Issuance"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ContactInfo = "registry@gov.com",
+                            Fee = 15.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "2 business days",
+                            ServiceDescription = "Obtain an official birth certificate.",
+                            ServiceName = "Birth Certificate Issuance"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ContactInfo = "nid@gov.com",
+                            Fee = 10.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "6 business days",
+                            ServiceDescription = "Apply for a new national ID card.",
+                            ServiceName = "National ID Card Application"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ContactInfo = "business@gov.com",
+                            Fee = 100.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "10 business days",
+                            ServiceDescription = "Register your new business legally.",
+                            ServiceName = "Business License Registration"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ContactInfo = "labor@gov.com",
+                            Fee = 70.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "8 business days",
+                            ServiceDescription = "Apply for a work permit for foreign employees.",
+                            ServiceName = "Work Permit Issuance"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            ContactInfo = "immigration@gov.com",
+                            Fee = 60.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "7 business days",
+                            ServiceDescription = "Renew your residency permit.",
+                            ServiceName = "Residency Permit Renewal"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            ContactInfo = "tax@gov.com",
+                            Fee = 25.00m,
+                            IsAvailable = true,
+                            ProcessingTime = "5 business days",
+                            ServiceDescription = "Register for tax purposes.",
+                            ServiceName = "Tax Registration"
+                        });
                 });
 
             modelBuilder.Entity("Government.Entities.ServiceData", b =>
                 {
-                    b.Property<int>("ServiceDataID")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceDataID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("FieldID")
+                    b.Property<int>("FieldId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("FieldValueDate")
@@ -376,9 +866,9 @@ namespace Government.Migrations
                     b.Property<int>("RequestId")
                         .HasColumnType("int");
 
-                    b.HasKey("ServiceDataID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("FieldID");
+                    b.HasIndex("FieldId");
 
                     b.HasIndex("RequestId");
 
@@ -387,17 +877,393 @@ namespace Government.Migrations
 
             modelBuilder.Entity("Government.Entities.ServiceField", b =>
                 {
-                    b.Property<int>("ServiceID")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("FieldID")
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("FieldId")
                         .HasColumnType("int");
 
-                    b.HasKey("ServiceID", "FieldID");
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("int");
 
-                    b.HasIndex("FieldID");
+                    b.HasKey("Id");
+
+                    b.HasIndex("FieldId");
+
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("ServiceFields", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FieldId = 1,
+                            ServiceId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FieldId = 2,
+                            ServiceId = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FieldId = 4,
+                            ServiceId = 1
+                        },
+                        new
+                        {
+                            Id = 4,
+                            FieldId = 16,
+                            ServiceId = 1
+                        },
+                        new
+                        {
+                            Id = 5,
+                            FieldId = 30,
+                            ServiceId = 1
+                        },
+                        new
+                        {
+                            Id = 6,
+                            FieldId = 6,
+                            ServiceId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            FieldId = 1,
+                            ServiceId = 2
+                        },
+                        new
+                        {
+                            Id = 8,
+                            FieldId = 2,
+                            ServiceId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            FieldId = 3,
+                            ServiceId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            FieldId = 6,
+                            ServiceId = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            FieldId = 10,
+                            ServiceId = 2
+                        },
+                        new
+                        {
+                            Id = 12,
+                            FieldId = 11,
+                            ServiceId = 2
+                        },
+                        new
+                        {
+                            Id = 13,
+                            FieldId = 1,
+                            ServiceId = 3
+                        },
+                        new
+                        {
+                            Id = 14,
+                            FieldId = 3,
+                            ServiceId = 3
+                        },
+                        new
+                        {
+                            Id = 15,
+                            FieldId = 6,
+                            ServiceId = 3
+                        },
+                        new
+                        {
+                            Id = 16,
+                            FieldId = 10,
+                            ServiceId = 3
+                        },
+                        new
+                        {
+                            Id = 17,
+                            FieldId = 15,
+                            ServiceId = 3
+                        },
+                        new
+                        {
+                            Id = 18,
+                            FieldId = 23,
+                            ServiceId = 3
+                        },
+                        new
+                        {
+                            Id = 19,
+                            FieldId = 1,
+                            ServiceId = 4
+                        },
+                        new
+                        {
+                            Id = 20,
+                            FieldId = 2,
+                            ServiceId = 4
+                        },
+                        new
+                        {
+                            Id = 21,
+                            FieldId = 17,
+                            ServiceId = 4
+                        },
+                        new
+                        {
+                            Id = 22,
+                            FieldId = 16,
+                            ServiceId = 4
+                        },
+                        new
+                        {
+                            Id = 23,
+                            FieldId = 21,
+                            ServiceId = 4
+                        },
+                        new
+                        {
+                            Id = 24,
+                            FieldId = 22,
+                            ServiceId = 4
+                        },
+                        new
+                        {
+                            Id = 25,
+                            FieldId = 1,
+                            ServiceId = 5
+                        },
+                        new
+                        {
+                            Id = 26,
+                            FieldId = 2,
+                            ServiceId = 5
+                        },
+                        new
+                        {
+                            Id = 27,
+                            FieldId = 3,
+                            ServiceId = 5
+                        },
+                        new
+                        {
+                            Id = 28,
+                            FieldId = 5,
+                            ServiceId = 5
+                        },
+                        new
+                        {
+                            Id = 29,
+                            FieldId = 6,
+                            ServiceId = 5
+                        },
+                        new
+                        {
+                            Id = 30,
+                            FieldId = 7,
+                            ServiceId = 5
+                        },
+                        new
+                        {
+                            Id = 31,
+                            FieldId = 16,
+                            ServiceId = 5
+                        },
+                        new
+                        {
+                            Id = 32,
+                            FieldId = 1,
+                            ServiceId = 6
+                        },
+                        new
+                        {
+                            Id = 33,
+                            FieldId = 6,
+                            ServiceId = 6
+                        },
+                        new
+                        {
+                            Id = 34,
+                            FieldId = 7,
+                            ServiceId = 6
+                        },
+                        new
+                        {
+                            Id = 35,
+                            FieldId = 13,
+                            ServiceId = 6
+                        },
+                        new
+                        {
+                            Id = 36,
+                            FieldId = 15,
+                            ServiceId = 6
+                        },
+                        new
+                        {
+                            Id = 37,
+                            FieldId = 26,
+                            ServiceId = 6
+                        },
+                        new
+                        {
+                            Id = 38,
+                            FieldId = 1,
+                            ServiceId = 7
+                        },
+                        new
+                        {
+                            Id = 39,
+                            FieldId = 3,
+                            ServiceId = 7
+                        },
+                        new
+                        {
+                            Id = 40,
+                            FieldId = 6,
+                            ServiceId = 7
+                        },
+                        new
+                        {
+                            Id = 41,
+                            FieldId = 8,
+                            ServiceId = 7
+                        },
+                        new
+                        {
+                            Id = 42,
+                            FieldId = 9,
+                            ServiceId = 7
+                        },
+                        new
+                        {
+                            Id = 43,
+                            FieldId = 16,
+                            ServiceId = 7
+                        },
+                        new
+                        {
+                            Id = 44,
+                            FieldId = 1,
+                            ServiceId = 8
+                        },
+                        new
+                        {
+                            Id = 45,
+                            FieldId = 3,
+                            ServiceId = 8
+                        },
+                        new
+                        {
+                            Id = 46,
+                            FieldId = 4,
+                            ServiceId = 8
+                        },
+                        new
+                        {
+                            Id = 47,
+                            FieldId = 6,
+                            ServiceId = 8
+                        },
+                        new
+                        {
+                            Id = 48,
+                            FieldId = 10,
+                            ServiceId = 8
+                        },
+                        new
+                        {
+                            Id = 49,
+                            FieldId = 16,
+                            ServiceId = 8
+                        },
+                        new
+                        {
+                            Id = 50,
+                            FieldId = 1,
+                            ServiceId = 9
+                        },
+                        new
+                        {
+                            Id = 51,
+                            FieldId = 3,
+                            ServiceId = 9
+                        },
+                        new
+                        {
+                            Id = 52,
+                            FieldId = 6,
+                            ServiceId = 9
+                        },
+                        new
+                        {
+                            Id = 53,
+                            FieldId = 7,
+                            ServiceId = 9
+                        },
+                        new
+                        {
+                            Id = 54,
+                            FieldId = 15,
+                            ServiceId = 9
+                        },
+                        new
+                        {
+                            Id = 55,
+                            FieldId = 26,
+                            ServiceId = 9
+                        },
+                        new
+                        {
+                            Id = 56,
+                            FieldId = 1,
+                            ServiceId = 10
+                        },
+                        new
+                        {
+                            Id = 57,
+                            FieldId = 3,
+                            ServiceId = 10
+                        },
+                        new
+                        {
+                            Id = 58,
+                            FieldId = 6,
+                            ServiceId = 10
+                        },
+                        new
+                        {
+                            Id = 59,
+                            FieldId = 7,
+                            ServiceId = 10
+                        },
+                        new
+                        {
+                            Id = 60,
+                            FieldId = 23,
+                            ServiceId = 10
+                        },
+                        new
+                        {
+                            Id = 61,
+                            FieldId = 27,
+                            ServiceId = 10
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -535,21 +1401,21 @@ namespace Government.Migrations
 
             modelBuilder.Entity("Government.Entities.AdminResponse", b =>
                 {
-                    b.HasOne("Government.Entities.Admin", "Admin")
-                        .WithMany("AdminResponses")
-                        .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Government.Entities.Request", "Request")
                         .WithOne("AdminResponse")
                         .HasForeignKey("Government.Entities.AdminResponse", "RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Admin");
+                    b.HasOne("Government.Entities.AppUser", "user")
+                        .WithMany("AdminResponses")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Request");
+
+                    b.Navigation("user");
                 });
 
             modelBuilder.Entity("Government.Entities.AttachedDocument", b =>
@@ -557,7 +1423,7 @@ namespace Government.Migrations
                     b.HasOne("Government.Entities.Request", "Request")
                         .WithMany("AttachedDocuments")
                         .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Request");
@@ -568,7 +1434,7 @@ namespace Government.Migrations
                     b.HasOne("Government.Entities.Request", "Request")
                         .WithMany("Payments")
                         .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Request");
@@ -579,13 +1445,13 @@ namespace Government.Migrations
                     b.HasOne("Government.Entities.Service", "service")
                         .WithMany("Requests")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Government.Entities.ApplicationUser", "User")
-                        .WithMany("Requests")
+                    b.HasOne("Government.Entities.AppUser", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -595,27 +1461,27 @@ namespace Government.Migrations
 
             modelBuilder.Entity("Government.Entities.RequiredDocument", b =>
                 {
-                    b.HasOne("Government.Entities.Service", "service")
+                    b.HasOne("Government.Entities.Service", "Service")
                         .WithMany("RequiredDocuments")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("service");
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("Government.Entities.ServiceData", b =>
                 {
                     b.HasOne("Government.Entities.Field", "Field")
                         .WithMany("ServiceData")
-                        .HasForeignKey("FieldID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FieldId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Government.Entities.Request", "Request")
                         .WithMany("serviceData")
                         .HasForeignKey("RequestId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Field");
@@ -627,14 +1493,14 @@ namespace Government.Migrations
                 {
                     b.HasOne("Government.Entities.Field", "Field")
                         .WithMany("ServiceFields")
-                        .HasForeignKey("FieldID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("FieldId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Government.Entities.Service", "service")
                         .WithMany("ServiceFields")
-                        .HasForeignKey("ServiceID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Field");
@@ -647,25 +1513,25 @@ namespace Government.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Government.Entities.Admin", null)
+                    b.HasOne("Government.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Government.Entities.Admin", null)
+                    b.HasOne("Government.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -674,33 +1540,28 @@ namespace Government.Migrations
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Government.Entities.Admin", null)
+                    b.HasOne("Government.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Government.Entities.Admin", null)
+                    b.HasOne("Government.Entities.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Government.Entities.Admin", b =>
+            modelBuilder.Entity("Government.Entities.AppUser", b =>
                 {
                     b.Navigation("AdminResponses");
-                });
-
-            modelBuilder.Entity("Government.Entities.ApplicationUser", b =>
-                {
-                    b.Navigation("Requests");
                 });
 
             modelBuilder.Entity("Government.Entities.Field", b =>
