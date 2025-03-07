@@ -20,6 +20,7 @@ namespace Government.Controllers
 
         [HttpGet]
         [Route ("All")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllServices(CancellationToken cancellationToken)
         {
 
