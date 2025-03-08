@@ -69,7 +69,7 @@ return Result.Success(AddRequestResponseDto)!;
                                           x.RequestStatus,
                                           x.ResponseStatus,
                                           x.AdminResponse.ResponseText ?? "No Response",
-                                          x.AttachedDocuments.Select(a => a.FileName),
+                                          x.AttachedDocuments.Select(a => a.FileName), /* اعادة الفايل نفسة*/
                                           x.Payments.Select(p => p.PaymentStatus)
                                           )
                                          ).AsNoTracking()
@@ -88,40 +88,44 @@ return Result.Success(AddRequestResponseDto)!;
 
         public async Task<Result<IEnumerable<RequestsDetailstoUser>>> GetUserRequestsDetails(CancellationToken cancellationToken)
         {
-          
 
             var UserId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
            
 
             var userRequests = await _context.Requests
                                  .Where(x => x.UserId == UserId)
-                                 .Include(r => r.service)
-                                 .Include(s => s.AdminResponse)
-                              //   .ProjectToType<RequestsDetailstoUser>()
+                                 .Select(x=> new RequestsDetailstoUser(
+                                     x.Id,
+                                     x.service.ServiceName,
+                                     x.RequestDate,
+                                     x.RequestStatus,
+                                     x.ResponseStatus,
+                                     x.AdminResponse.ResponseText                       
+                                     ))
                                  .AsNoTracking()
                                  .ToListAsync();
 
 
-            if (userRequests == null || !userRequests.Any())
-            {
-                IEnumerable<RequestsDetailstoUser> emptyList = new List<RequestsDetailstoUser>();
+            //if (userRequests == null || !userRequests.Any())
+            //{
+            //    IEnumerable<RequestsDetailstoUser> emptyList = new List<RequestsDetailstoUser>();
 
-                return Result.Success(emptyList); // empty list 
-            }
+            //    return Result.Success(emptyList); // empty list 
+            //}
 
-            var ReqResponse = userRequests.Adapt<IEnumerable<RequestsDetailstoUser>>();
+            //var ReqResponse = userRequests.Adapt<IEnumerable<RequestsDetailstoUser>>();
 
-            return Result.Success(ReqResponse);
+            return Result.Success<IEnumerable<RequestsDetailstoUser>>(userRequests);
 
         }
 
 
-        public async  Task<Result<IEnumerable<RequestsDetailstoUser>>> GetRequestByStatusAsync(RequestStatus request, CancellationToken cancellationToken)
+        public async  Task<Result<IEnumerable<RequestsDetailstoUser>>> GetRequestByStatusAsync(string request, CancellationToken cancellationToken)
         {
 
             var UserId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var requests = await _context.Requests.Where(r => r.UserId == UserId && r.RequestStatus == request.requestStatus) 
+            var requests = await _context.Requests.Where(r => r.UserId == UserId && r.RequestStatus == request) 
                         .Select(x => new RequestsDetailstoUser(
                             x.Id,
                             x.service.ServiceName,
@@ -133,6 +137,8 @@ return Result.Success(AddRequestResponseDto)!;
                             )
                         .AsNoTracking()
                         .ToListAsync(cancellationToken);
+            logger.LogInformation($"UserId: {UserId}, RequestStatus: {request}");
+
 
             return Result.Success<IEnumerable<RequestsDetailstoUser>>(requests);
                                 

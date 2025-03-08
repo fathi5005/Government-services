@@ -44,6 +44,7 @@ namespace Government.ApplicationServices.AdminServices
                 request.ResponseStatus = "Responded";
 
             }
+          
             else if (adminReplyToREquest.Action == "Reject")
             {
                 request.RequestStatus = "Rejected";

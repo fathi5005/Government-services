@@ -9,7 +9,7 @@ namespace Government.ApplicationServices.RequestServices
        // Task<Result <AddRequestResponseDto>> AddRequestAsync(AddRequestDto requestDto, CancellationToken cancellationToken);
         Task<Result<IEnumerable<RequestsDetailstoUser>>> GetUserRequestsDetails(CancellationToken cancellationToken);
         Task<Result<RequestDetailsResponse>> GetRequestAsync(int requestId, CancellationToken cancellationToken);
-        Task<Result<IEnumerable<RequestsDetailstoUser>>> GetRequestByStatusAsync(RequestStatus request, CancellationToken cancellationToken);
+        Task<Result<IEnumerable<RequestsDetailstoUser>>> GetRequestByStatusAsync(string request, CancellationToken cancellationToken);
         Task<Result <SubmitResponseDto>> SubmitRequestAsync(SubmitRequestDto requestDto, CancellationToken cancellationToken);
 
     }

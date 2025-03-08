@@ -51,8 +51,8 @@ namespace Government.Controllers
 
 
         [HttpGet("")]
-
-        public async Task<IActionResult> GetRequestByStatus([FromBody] RequestStatus requestStatus, CancellationToken cancellationToken)
+        
+        public async Task<IActionResult> GetRequestByStatus([FromQuery] string requestStatus, CancellationToken cancellationToken)
         {
 
             var result = await _requestService.GetRequestByStatusAsync(requestStatus, cancellationToken);

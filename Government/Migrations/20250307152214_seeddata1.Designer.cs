@@ -4,6 +4,7 @@ using Government.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Government.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250307152214_seeddata1")]
+    partial class seeddata1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -445,206 +448,6 @@ namespace Government.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Requests", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Pending",
-                            ResponseStatus = "No Response",
-                            ServiceId = 1,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Completed",
-                            ResponseStatus = "Responded",
-                            ServiceId = 1,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Rejected",
-                            ResponseStatus = "Responded",
-                            ServiceId = 1,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Pending",
-                            ResponseStatus = "No Response",
-                            ServiceId = 1,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Completed",
-                            ResponseStatus = "Responded",
-                            ServiceId = 2,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Rejected",
-                            ResponseStatus = "Responded",
-                            ServiceId = 3,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Pending",
-                            ResponseStatus = "No Response",
-                            ServiceId = 2,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Completed",
-                            ResponseStatus = "Responded",
-                            ServiceId = 4,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Rejected",
-                            ResponseStatus = "Responded",
-                            ServiceId = 5,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Pending",
-                            ResponseStatus = "No Response",
-                            ServiceId = 6,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Completed",
-                            ResponseStatus = "Responded",
-                            ServiceId = 7,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Rejected",
-                            ResponseStatus = "Responded",
-                            ServiceId = 7,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Pending",
-                            ResponseStatus = "No Response",
-                            ServiceId = 9,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Completed",
-                            ResponseStatus = "Responded",
-                            ServiceId = 10,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Pending",
-                            ResponseStatus = "No Response",
-                            ServiceId = 5,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Completed",
-                            ResponseStatus = "Responded",
-                            ServiceId = 6,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Rejected",
-                            ResponseStatus = "Responded",
-                            ServiceId = 7,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Pending",
-                            ResponseStatus = "No Response",
-                            ServiceId = 8,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Completed",
-                            ResponseStatus = "Responded",
-                            ServiceId = 9,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Rejected",
-                            ResponseStatus = "Responded",
-                            ServiceId = 10,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Rejected",
-                            ResponseStatus = "Responded",
-                            ServiceId = 2,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            RequestDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            RequestStatus = "Rejected",
-                            ResponseStatus = "Responded",
-                            ServiceId = 1,
-                            UserId = "bc8e797e-ce7e-4567-8bad-4593c7e9e745"
-                        });
                 });
 
             modelBuilder.Entity("Government.Entities.RequiredDocument", b =>

@@ -1,6 +1,7 @@
 ﻿using Government.Abstractions;
 using Government.ApplicationServices.GetFields;
 using Government.ApplicationServices.GovernmentServices;
+using Government.ApplicationServices.Results;
 using Government.Contracts.Services;
 using Government.Errors;
 using Microsoft.AspNetCore.Authorization;
@@ -100,6 +101,16 @@ namespace Government.Controllers
                      ? result.ToProblem(statuscode: StatusCodes.Status409Conflict)
                      : result.ToProblem(statuscode: StatusCodes.Status404NotFound);
         }
+
+
+        [HttpGet("MostRequestedServices")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetServiceStatistics()
+        {
+            var result = await _service.GetMostRequestedServicesAsync();
+            return Ok(result.Value());
+        }
+
 
 
 

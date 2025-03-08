@@ -110,5 +110,46 @@ namespace Government.ApplicationServices.GovernmentServices
 
 
         }
+        //Task<Result<IEnumerable< MostRequested>>>
+        public async Task<Result<IEnumerable<MostRequested>>> GetMostRequestedServicesAsync()
+        {
+
+            var mostRequestedServices = await _context.Requests
+                                             .GroupBy(r => r.ServiceId)
+                                             .Select(x => new
+                                             {
+                                                 ServiceId = x.Key,
+                                                 RequestCount = x.Count()
+                                             })
+                                             .OrderByDescending(u => u.RequestCount)
+                                             .Take(5)
+                                             .ToListAsync();
+
+                                                    
+            var serviceIds = mostRequestedServices.Select(x => x.ServiceId).ToList();
+
+
+            //var services = await _context.Services
+            //                   .Where(s => serviceIds.Contains(s.Id))
+            //                   .Select(s => s.ServiceName)
+            //                   .ToListAsync();
+
+            var services = await _context.Services
+                      .Where(s => serviceIds.Contains(s.Id))
+                      .Select(s => new MostRequested(s.ServiceName)) // تحويل مباشرة إلى MostRequested
+                      .ToListAsync();
+
+            // var service = new MostRequested(services);
+
+
+
+            return Result.Success<IEnumerable<MostRequested>>(services);
+
+
+
+
+
+
+        }
     }
 }
