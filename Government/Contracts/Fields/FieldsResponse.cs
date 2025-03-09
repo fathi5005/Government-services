@@ -4,7 +4,8 @@
     (
        int Id ,
        string FiledName ,
-       string Description 
+       string Description ,
+       string HtmlType 
 
     );
 

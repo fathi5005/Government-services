@@ -9,6 +9,7 @@ global using Government;
 global using Government.Contracts.Authentication;
 global using Government.Abstractions;
 global using FluentValidation;
+global using Government.ApplicationServices.Fields;
 
 
 

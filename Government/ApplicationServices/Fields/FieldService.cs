@@ -3,7 +3,7 @@ using Government.Contracts.Fields;
 using Government.Errors;
 using Microsoft.EntityFrameworkCore;
 
-namespace Government.ApplicationServices.GetFields
+namespace Government.ApplicationServices.Fields
 {
     public class FieldService(AppDbContext context) : IFieldService
     {
@@ -22,8 +22,9 @@ namespace Government.ApplicationServices.GetFields
                             .Where(x => x.ServiceId == serviceId)
                             .Select(x=> new FieldsResponse(                  
                                 x.Field.Id,
-                                x.Field.FiledName,
-                                x.Field.Description
+                                x.Field.FieldName,
+                                x.Field.Description,
+                                x.Field.HtmlType
                                 ))
                             .AsNoTracking()
                             .ToListAsync(cancellationToken);

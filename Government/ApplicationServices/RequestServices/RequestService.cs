@@ -146,7 +146,7 @@ return Result.Success(AddRequestResponseDto)!;
 
         public async Task<Result<SubmitResponseDto>> SubmitRequestAsync(SubmitRequestDto requestDto, CancellationToken cancellationToken)
         {
-           // var userIdClaim = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+            var userId = _httpContextAccessor.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
          
 
             using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
@@ -155,7 +155,7 @@ return Result.Success(AddRequestResponseDto)!;
                 var request = new Request
                 {
                     RequestDate = DateTime.UtcNow,
-                    UserId = requestDto.UserId,
+                    UserId = userId!,
                     ServiceId = requestDto.ServiceId,
                     AttachedDocuments = new List<AttachedDocument>(),
                     serviceData = new List<ServiceData>()
@@ -219,26 +219,146 @@ return Result.Success(AddRequestResponseDto)!;
 
         private async Task<string> SaveFile(IFormFile file)
         {
-            // تحديد المسار الافتراضي إذا كان WebRootPath فارغًا
-            var uploadsFolder = Path.Combine(env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "uploads");
+          
+            var docsFolder = Path.Combine(env.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"), "upload");
 
-            // التأكد من وجود المجلد
-            Directory.CreateDirectory(uploadsFolder);
+            Directory.CreateDirectory(docsFolder);
 
-            // إنشاء اسم عشوائي للملف
-            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
-            var filePath = Path.Combine(uploadsFolder, fileName);
+            var fileCount = Directory.GetFiles(docsFolder).Length + 1;
 
-            // حفظ الملف
+            var fileName = $"{fileCount}_{file.FileName}";
+            var filePath = Path.Combine(docsFolder, fileName);
+
+           
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
             }
 
-            return $"/uploads/{fileName}";
+            return $"https://government-services.runasp.net/docs/{fileName}";
         }
-
 
     }
 }
 
+/*
+ <form id="submitRequestForm">
+  <label for="userId">معرف المستخدم:</label>
+  <input type="text" id="userId" name="UserId" value="user123" />
+  <br />
+
+  <label for="serviceId">معرف الخدمة:</label>
+  <input type="number" id="serviceId" name="ServiceId" value="2" onchange="loadFields()" />
+  <br />
+
+  <!-- حيث سيتم إضافة الحقول ديناميكيًا -->
+  <div id="dynamicFields"></div>
+
+  <label for="files">الملفات:</label>
+  <input type="file" id="files" name="Files" multiple />
+  <br />
+
+  <button type="submit">إرسال الطلب</button>
+</form>
+
+<script>
+// جلب تعريف الحقول بناءً على ServiceId
+function loadFields() {
+    const serviceId = document.getElementById('serviceId').value;
+    fetch(`https://government-services.runasp.net/api/services/${serviceId}/fields`)
+        .then(response => response.json())
+        .then(fields => {
+            const container = document.getElementById('dynamicFields');
+            container.innerHTML = ''; // مسح الحقول السابقة
+
+            fields.forEach(field => {
+                const label = document.createElement('label');
+                label.textContent = `${field.Name}: `;
+
+                const input = document.createElement('input');
+                input.dataset.fieldId = field.FieldId; // تخزين FieldId
+                input.dataset.fieldType = field.Type;  // تخزين نوع الحقل
+
+                // تحديد نوع الـ input بناءً على Type
+                if (field.Type === 'date') input.type = 'date';
+                else if (field.Type === 'int' || field.Type === 'float') input.type = 'number';
+                else input.type = 'text'; // string افتراضيًا
+
+                container.appendChild(label);
+                container.appendChild(input);
+                container.appendChild(document.createElement('br'));
+            });
+        })
+        .catch(error => alert('خطأ في جلب الحقول: ' + error));
+}
+
+// إرسال الطلب
+document.getElementById('submitRequestForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const userId = document.getElementById('userId').value;
+    const serviceId = document.getElementById('serviceId').value;
+    const files = document.getElementById('files').files;
+
+    // جمع بيانات الحقول ديناميكيًا
+    const inputs = document.querySelectorAll('#dynamicFields input');
+    const serviceData = Array.from(inputs).map(input => {
+        const fieldId = parseInt(input.dataset.fieldId);
+        const fieldType = input.dataset.fieldType;
+        const value = input.value;
+
+        // وضع القيمة في المتغير الصحيح بناءً على نوع الحقل
+        let data = { FieldId: fieldId };
+        if (fieldType === 'string') {
+            data.FieldValueString = value || null;
+            data.FieldValueInt = null;
+            data.FieldValueFloat = null;
+            data.FieldValueDate = null;
+        } else if (fieldType === 'int') {
+            data.FieldValueString = null;
+            data.FieldValueInt = value ? parseInt(value) : null;
+            data.FieldValueFloat = null;
+            data.FieldValueDate = null;
+        } else if (fieldType === 'float') {
+            data.FieldValueString = null;
+            data.FieldValueInt = null;
+            data.FieldValueFloat = value ? parseFloat(value) : null;
+            data.FieldValueDate = null;
+        } else if (fieldType === 'date') {
+            data.FieldValueString = null;
+            data.FieldValueInt = null;
+            data.FieldValueFloat = null;
+            data.FieldValueDate = value ? new Date(value).toISOString() : null;
+        }
+
+        return data;
+    });
+
+    // إنشاء FormData
+    const formData = new FormData();
+    formData.append('UserId', userId);
+    formData.append('ServiceId', serviceId);
+
+    // إضافة الملفات
+    for (let i = 0; i < files.length; i++) {
+        formData.append('Files', files[i]);
+    }
+
+    // إضافة ServiceData كـ JSON
+    formData.append('ServiceData', JSON.stringify(serviceData));
+
+    // إرسال الطلب
+    fetch('https://government-services.runasp.net/api/submit-request', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => alert('تم الإرسال بنجاح: ' + JSON.stringify(data)))
+    .catch(error => alert('خطأ في الإرسال: ' + error));
+});
+
+// تحميل الحقول عند تحميل الصفحة
+loadFields();
+</script>
+ 
+ */

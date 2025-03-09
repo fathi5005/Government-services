@@ -1,28 +1,19 @@
-﻿using Government.ApplicationServices.GetFields;
-using Government.ApplicationServices.RequestServices;
-using Government.Contracts.Request;
+﻿using Government.ApplicationServices.RequestServices;
 using Government.Contracts.Request.Submiting;
-using Government.Entities;
-using Mapster;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
+
 
 namespace Government.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class RequestsController(IRequestService requestService, AppDbContext context, IFieldService fieldService) : ControllerBase
+    public class RequestsController(IRequestService requestService, AppDbContext context, IFieldService fieldService, IWebHostEnvironment environment) : ControllerBase
     {
         private readonly IRequestService _requestService = requestService;
         private readonly AppDbContext _context = context;
         private readonly IFieldService fieldService = fieldService;
-
-       
-
+        private readonly IWebHostEnvironment env = environment;
 
         [HttpGet("GetUserRequestsById")]
        
@@ -88,7 +79,7 @@ namespace Government.Controllers
 
         [HttpPost("submit")]
         [AllowAnonymous]
-        public async Task<IActionResult> SubmitServiceRequest([FromForm] SubmitRequestDto requestDto , CancellationToken cancellationToken)
+        public async Task<IActionResult> SubmitServiceRequest([FromForm] SubmitRequestDto requestDto, CancellationToken cancellationToken)
         {
             var result = await _requestService.SubmitRequestAsync(requestDto, cancellationToken);
 
@@ -96,6 +87,8 @@ namespace Government.Controllers
 
         }
 
+
     }
+
 }
 

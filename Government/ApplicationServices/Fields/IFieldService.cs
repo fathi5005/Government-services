@@ -1,7 +1,7 @@
 ﻿using Government.Contracts.Documents.cs;
 using Government.Contracts.Fields;
 
-namespace Government.ApplicationServices.GetFields
+namespace Government.ApplicationServices.Fields
 {
     public interface IFieldService
     {
