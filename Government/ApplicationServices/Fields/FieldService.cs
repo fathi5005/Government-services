@@ -24,7 +24,10 @@ namespace Government.ApplicationServices.Fields
                                 x.Field.Id,
                                 x.Field.FieldName,
                                 x.Field.Description,
-                                x.Field.HtmlType
+                                x.Field.HtmlType,
+                                x.Field.HtmlType == "text" || x.Field.HtmlType == "textarea" ? "string" :
+                                x.Field.HtmlType == "number" ? "int" : // افتراض إن number بيبدأ كـ int، الـ frontend هيحدد float لو فيه كسور
+                                x.Field.HtmlType == "date" || x.Field.HtmlType == "datetime-local" ? "date" : "unknown"
                                 ))
                             .AsNoTracking()
                             .ToListAsync(cancellationToken);

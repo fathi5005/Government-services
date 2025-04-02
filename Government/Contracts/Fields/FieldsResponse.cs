@@ -5,7 +5,8 @@
        int Id ,
        string FiledName ,
        string Description ,
-       string HtmlType 
+       string HtmlType ,
+       string ValueType
 
     );
 

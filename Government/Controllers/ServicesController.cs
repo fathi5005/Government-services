@@ -2,6 +2,7 @@
 using Government.Contracts.Services;
 using Government.Errors;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Government.Controllers
@@ -9,10 +10,11 @@ namespace Government.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ServicesController(IService service, IWebHostEnvironment environment) : ControllerBase
+    public class ServicesController(IService service, IWebHostEnvironment environment, AppDbContext context ) : ControllerBase
     {
         private readonly IService _service = service;
         private readonly IWebHostEnvironment environment = environment;
+        private readonly AppDbContext context = context;
 
         [HttpGet]
         [Route("All")]
@@ -27,16 +29,20 @@ namespace Government.Controllers
 
         [HttpGet]
         [Route("available")]
-        public async Task<IActionResult> GetAvailableServices(CancellationToken cancellationToken)
+        [AllowAnonymous]
+
+        public async Task<IActionResult> GetAvailableServices([FromQuery] string servicecategory, CancellationToken cancellationToken)
         {
 
-            var services = await _service.GetAllAvailableServicesAsync(cancellationToken);
+            var services = await _service.GetAllAvailableServicesAsync(servicecategory, cancellationToken);
             return Ok(services.Value());
         }
 
 
         [HttpGet]
         [Route("{id}")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> GetService([FromRoute] int id, CancellationToken cancellationToken)
         {
 
@@ -107,44 +113,68 @@ namespace Government.Controllers
         }
 
 
+        //[HttpPut("update-categories")]
+        //[AllowAnonymous]
 
-
-        //[HttpPost("upload")]
-        //public async Task<IActionResult> UploadFile(IFormFile file)
+        //public async Task<IActionResult> UpdateAllCategories()
         //{
-        //    if (file == null || file.Length == 0)
-        //        return BadRequest("No file uploaded.");
-
-        //    // التحقق من أن الملف PDF فقط
-        //    if (Path.GetExtension(file.FileName).ToLower() != ".pdf")
-        //        return BadRequest("Only PDF files are allowed.");
-
-        //    // الحد الأقصى لحجم الملف (مثلاً 5MB)
-        //    if (file.Length > 5 * 1024 * 1024)
-        //        return BadRequest("File size exceeds 5MB.");
-
-        //    // مسار الحفظ في wwwroot/docs
-        //    var uploadsFolder = Path.Combine(environment.WebRootPath, "docs");
-        //    if (!Directory.Exists(uploadsFolder))
-        //        Directory.CreateDirectory(uploadsFolder);
-
-        //    // اسم الملف الفريد لتجنب التكرار
-        //    var fileName = $"{Guid.NewGuid()}_{file.FileName}";
-        //    var filePath = Path.Combine(uploadsFolder, fileName);
-
-        //    // حفظ الملف
-        //    using (var stream = new FileStream(filePath, FileMode.Create))
+        //    try
         //    {
-        //        await file.CopyToAsync(stream);
+        //        var services = await context.Services.ToListAsync();
+
+        //        foreach (var service in services)
+        //        {
+        //            switch (service.Id)
+        //            {
+        //                case 1:
+        //                    service.category = "خدمات السفر";
+        //                    break;
+        //                case 2:
+        //                case 3:
+        //                    service.category = "خدمات المرور";
+        //                    break;
+        //                case 4:
+        //                case 5:
+        //                case 6:
+        //                case 11:
+        //                    service.category = "خدمات مدنية";
+        //                    break;
+        //                case 7:
+        //                case 12:
+        //                    service.category = "خدمات تجارية";
+        //                    break;
+        //                case 8:
+        //                    service.category = "خدمات العمل";
+        //                    break;
+        //                case 9:
+        //                    service.category = "خدمات الإقامة";
+        //                    break;
+        //                case 10:
+        //                    service.category = "خدمات مالية";
+        //                    break;
+        //                case 13:
+        //                    service.category = "خدمات أمنية";
+        //                    break;
+        //                case 14:
+        //                    service.category = "خدمات عقارية";
+        //                    break;
+        //                case 15:
+        //                    service.category = "خدمات اجتماعية";
+        //                    break;
+        //                default:
+        //                    service.category = "غير محدد";
+        //                    break;
+        //            }
+        //        }
+
+        //        await context.SaveChangesAsync();
+        //        return Ok(new { message = "تم تحديث فئات الخدمات بنجاح" });
         //    }
-
-        //    // إرجاع رابط الملف
-        //    var fileUrl = $"https://government-services.runasp.net/docs/{fileName}";
-        //    return Ok(new { FileUrl = fileUrl });
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, new { message = "حدث خطأ أثناء التحديث", error = ex.Message });
+        //    }
         //}
-
-
-
 
 
 

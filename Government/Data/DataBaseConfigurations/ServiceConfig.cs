@@ -21,6 +21,10 @@ namespace Government.Data.DataBaseConfigurations
                .HasMaxLength(1500)
                .IsRequired();
 
+            builder.Property(x => x.category)
+                .HasMaxLength(250);
+
+
             builder.HasIndex(x => x.ServiceDescription).IsUnique();
 
 

@@ -2,7 +2,8 @@
 {
     public record RequestsDetailstoUser
      (
-     int RequestID,
+     int RequestId,
+     int ServiceId,
      string ServiceName,
      DateTime RequestDate,
      string RequestStatus,

@@ -1,6 +1,11 @@
 ﻿using Government.ApplicationServices.RequestServices;
+using Government.Contracts.Fields;
 using Government.Contracts.Request.Submiting;
+using Government.Contracts.Services;
+using Government.Errors;
 using Microsoft.AspNetCore.Authorization;
+using MimeKit.Tnef;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace Government.Controllers
@@ -20,7 +25,7 @@ namespace Government.Controllers
         public async Task<IActionResult> GetUserRequests(CancellationToken cancellationToken)
         {
 
-            var userRequests = await _requestService.GetUserRequestsDetails(cancellationToken);
+            var userRequests = await _requestService.GetUserRequests(cancellationToken);
 
             return Ok(userRequests.Value());
 
@@ -28,14 +33,25 @@ namespace Government.Controllers
 
 
 
+        //[HttpGet("{requestId}")]
+
+        //public async Task<IActionResult> GetRequest([FromRoute] int requestId,CancellationToken cancellationToken)
+        //{
+
+        //    var result = await _requestService.GetRequestAsync(requestId, cancellationToken);
+
+        //    return result.IsSuccess ? Ok(result.Value()): result.ToProblem(statuscode:StatusCodes.Status404NotFound);
+
+        //}
+
         [HttpGet("{requestId}")]
 
-        public async Task<IActionResult> GetRequest([FromRoute] int requestId,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetRequest([FromRoute] int requestId, CancellationToken cancellationToken)
         {
 
-            var result = await _requestService.GetRequestAsync(requestId, cancellationToken);
+            var result = await _requestService.GetUserRequestsDetails(requestId, cancellationToken);
 
-            return result.IsSuccess ? Ok(result.Value()): result.ToProblem(statuscode:StatusCodes.Status404NotFound);
+            return result.IsSuccess ? Ok(result.Value()) : result.ToProblem(statuscode: StatusCodes.Status404NotFound);
 
         }
 
@@ -54,6 +70,7 @@ namespace Government.Controllers
 
         [HttpGet]
         [Route("{serviceId}/fields")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetFields([FromRoute] int serviceId, CancellationToken cancellationToken)
         {
 
@@ -66,6 +83,8 @@ namespace Government.Controllers
 
         [HttpGet]
         [Route("{serviceId}/documents")]
+        [AllowAnonymous]
+
         public async Task<IActionResult> GetDocuments([FromRoute] int serviceId, CancellationToken cancellationToken)
         {
 
@@ -78,12 +97,25 @@ namespace Government.Controllers
 
 
         [HttpPost("submit")]
-        [AllowAnonymous]
+        
         public async Task<IActionResult> SubmitServiceRequest([FromForm] SubmitRequestDto requestDto, CancellationToken cancellationToken)
         {
             var result = await _requestService.SubmitRequestAsync(requestDto, cancellationToken);
 
             return result.IsSuccess ? Ok(result.Value()) : result.ToProblem(statuscode: StatusCodes.Status500InternalServerError);
+
+        }
+
+
+        [HttpPut("Update/{id}")]
+
+        public async Task<IActionResult> UpdateService([FromRoute,Range(1,int.MaxValue)]int id, [FromBody]IEnumerable< UpdateRequest> requestDto, CancellationToken cancellationToken)
+        {
+
+            var result = await _requestService.UpdateRequestAsync(id, requestDto, cancellationToken);
+
+            return (result.IsSuccess)?
+                 NoContent(): result.ToProblem(statuscode: StatusCodes.Status404NotFound);
 
         }
 

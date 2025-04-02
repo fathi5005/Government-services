@@ -10,16 +10,32 @@ namespace Government.ApplicationServices.GovernmentServices
     {
         private readonly AppDbContext _context = context;
 
-        public async Task<Result<IEnumerable<ServiceResponse>>> GetAllAvailableServicesAsync(CancellationToken cancellationToken = default)
+        public async Task<Result<IEnumerable<ServiceResponse>>> GetAllAvailableServicesAsync(string serviceCategory, CancellationToken cancellationToken = default)
         {
-            var services = await _context.Services
-                                    .Where(x=>x.IsAvailable)
-                                    .AsNoTracking()
-                                    .ToListAsync(cancellationToken);
+            if (serviceCategory == "All")
+            {
+                var services = await _context.Services
+                             .Where(x => x.IsAvailable)
+                             .AsNoTracking()
+                             .ToListAsync(cancellationToken);
 
-            var serviceResponse = services.Adapt<IEnumerable<ServiceResponse>>();
+                var serviceResponse = services.Adapt<IEnumerable<ServiceResponse>>();
+                return Result.Success(serviceResponse);
 
-            return Result.Success(serviceResponse);
+            }
+            else
+            {
+
+                var services = await _context.Services
+                                        .Where(x => x.IsAvailable && x.category == serviceCategory)
+                                        .AsNoTracking()
+                                        .ToListAsync(cancellationToken);
+
+                var serviceResponse = services.Adapt<IEnumerable<ServiceResponse>>();
+                return Result.Success(serviceResponse);
+            }
+
+           
         }
 
         public async Task<Result<IEnumerable<ServiceResponse>>> GetAllServicesAsync(CancellationToken cancellationToken = default)
@@ -110,7 +126,7 @@ namespace Government.ApplicationServices.GovernmentServices
 
 
         }
-        //Task<Result<IEnumerable< MostRequested>>>
+       
         public async Task<Result<IEnumerable<MostRequested>>> GetMostRequestedServicesAsync()
         {
 

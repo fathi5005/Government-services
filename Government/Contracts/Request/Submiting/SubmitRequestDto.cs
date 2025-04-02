@@ -3,7 +3,7 @@
     public record SubmitRequestDto(
 
        [FromForm] int ServiceId,
-       [FromForm] IFormFile[] Files,  // 🔥 غيرنا List<IFormFile> إلى IFormFile[]
+       [FromForm] IFormFile[] Files,  
        [FromForm] List<ServiceDataDto> ServiceData
 
  );

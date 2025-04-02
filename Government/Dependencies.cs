@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
 using Government.ApplicationServices.AdminServices;
-
+using Government.ApplicationServices.Files;
 using Government.ApplicationServices.GovernmentServices;
 using Government.ApplicationServices.RequestServices;
 using Government.ApplicationServices.Results;
@@ -51,6 +51,7 @@ namespace Government
             services.AddScoped<IEmailSender, EmailService>();
             services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IDashboardService, DashboardService>();
+            services.AddScoped<IFileService, FileService>();
 
             // Exception Handler
             services.AddExceptionHandler<GlobalExceptionHandler>()

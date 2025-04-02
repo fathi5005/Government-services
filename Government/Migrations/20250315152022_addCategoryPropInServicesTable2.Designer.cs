@@ -4,6 +4,7 @@ using Government.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Government.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250315152022_addCategoryPropInServicesTable2")]
+    partial class addCategoryPropInServicesTable2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1597,11 +1600,6 @@ namespace Government.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<string>("category")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ServiceDescription")
@@ -1621,8 +1619,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "5 أيام عمل",
                             ServiceDescription = "تجديد جواز السفر المصري بسهولة وسرعة.",
-                            ServiceName = "تجديد جواز السفر",
-                            category = ""
+                            ServiceName = "تجديد جواز السفر"
                         },
                         new
                         {
@@ -1632,8 +1629,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "7 أيام عمل",
                             ServiceDescription = "التقديم للحصول على رخصة قيادة جديدة.",
-                            ServiceName = "إصدار رخصة قيادة",
-                            category = ""
+                            ServiceName = "إصدار رخصة قيادة"
                         },
                         new
                         {
@@ -1643,8 +1639,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "3 أيام عمل",
                             ServiceDescription = "تسجيل مركبتك لدى إدارة المرور.",
-                            ServiceName = "تسجيل مركبة",
-                            category = ""
+                            ServiceName = "تسجيل مركبة"
                         },
                         new
                         {
@@ -1654,8 +1649,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "4 أيام عمل",
                             ServiceDescription = "طلب شهادة زواج رسمية من السجل المدني.",
-                            ServiceName = "إصدار شهادة زواج",
-                            category = ""
+                            ServiceName = "إصدار شهادة زواج"
                         },
                         new
                         {
@@ -1665,8 +1659,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "2 يوم عمل",
                             ServiceDescription = "استخراج شهادة ميلاد رسمية.",
-                            ServiceName = "إصدار شهادة ميلاد",
-                            category = ""
+                            ServiceName = "إصدار شهادة ميلاد"
                         },
                         new
                         {
@@ -1676,8 +1669,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "6 أيام عمل",
                             ServiceDescription = "طلب إصدار بطاقة رقم قومي جديدة.",
-                            ServiceName = "التقديم لبطاقة الرقم القومي",
-                            category = ""
+                            ServiceName = "التقديم لبطاقة الرقم القومي"
                         },
                         new
                         {
@@ -1687,8 +1679,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "10 أيام عمل",
                             ServiceDescription = "تسجيل عملك التجاري بشكل قانوني.",
-                            ServiceName = "تسجيل رخصة تجارية",
-                            category = ""
+                            ServiceName = "تسجيل رخصة تجارية"
                         },
                         new
                         {
@@ -1698,8 +1689,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "8 أيام عمل",
                             ServiceDescription = "التقديم لتصريح عمل للأجانب.",
-                            ServiceName = "إصدار تصريح عمل",
-                            category = ""
+                            ServiceName = "إصدار تصريح عمل"
                         },
                         new
                         {
@@ -1709,8 +1699,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "7 أيام عمل",
                             ServiceDescription = "تجديد تصريح الإقامة للمقيمين.",
-                            ServiceName = "تجديد تصريح الإقامة",
-                            category = ""
+                            ServiceName = "تجديد تصريح الإقامة"
                         },
                         new
                         {
@@ -1720,8 +1709,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "5 أيام عمل",
                             ServiceDescription = "التسجيل لأغراض الضرائب.",
-                            ServiceName = "التسجيل الضريبي",
-                            category = ""
+                            ServiceName = "التسجيل الضريبي"
                         },
                         new
                         {
@@ -1731,8 +1719,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "2 يوم عمل",
                             ServiceDescription = "طلب شهادة وفاة رسمية.",
-                            ServiceName = "استخراج شهادة وفاة",
-                            category = ""
+                            ServiceName = "استخراج شهادة وفاة"
                         },
                         new
                         {
@@ -1742,8 +1729,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "7 أيام عمل",
                             ServiceDescription = "تجديد السجل التجاري للشركات.",
-                            ServiceName = "تجديد السجل التجاري",
-                            category = ""
+                            ServiceName = "تجديد السجل التجاري"
                         },
                         new
                         {
@@ -1753,8 +1739,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "3 أيام عمل",
                             ServiceDescription = "استخراج شهادة حسن سير وسلوك.",
-                            ServiceName = "إصدار شهادة حسن سير وسلوك",
-                            category = ""
+                            ServiceName = "إصدار شهادة حسن سير وسلوك"
                         },
                         new
                         {
@@ -1764,8 +1749,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "10 أيام عمل",
                             ServiceDescription = "تسجيل ملكية عقار في الشهر العقاري.",
-                            ServiceName = "تسجيل عقار",
-                            category = ""
+                            ServiceName = "تسجيل عقار"
                         },
                         new
                         {
@@ -1775,8 +1759,7 @@ namespace Government.Migrations
                             IsAvailable = true,
                             ProcessingTime = "5 أيام عمل",
                             ServiceDescription = "التسجيل للحصول على بطاقة تموين.",
-                            ServiceName = "التقديم للحصول على دعم تمويني",
-                            category = ""
+                            ServiceName = "التقديم للحصول على دعم تمويني"
                         });
                 });
 
